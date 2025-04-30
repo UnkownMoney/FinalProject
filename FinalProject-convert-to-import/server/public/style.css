@@ -1,0 +1,441 @@
+/* ===== BASE STYLES & VARIABLES ===== */
+:root {
+  --primary: #3498db;
+  --primary-dark: #2980b9;
+  --secondary: #f1c40f;
+  --danger: #e74c3c;
+  --light: #f8f9fa;
+  --dark: #2c3e50;
+  --gray: #7f8c8d;
+  --white: #ffffff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light);
+  color: var(--dark);
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ===== HEADER STYLES ===== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.clickable-header {
+  margin: 0;
+  font-size: 24px;
+  color: var(--dark);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clickable-header:hover {
+  color: var(--primary);
+  transform: translateX(5px);
+}
+
+.card-counter {
+  font-size: 16px;
+  color: var(--gray);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 5px 15px;
+  border-radius: 20px;
+}
+
+/* ===== FORM STYLES ===== */
+.create-section {
+  background: var(--white);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-top: 0;
+  color: var(--dark);
+  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: var(--transition);
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.submit-btn {
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: var(--transition);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== UPDATED FLASHCARD LIST STYLES ===== */
+.flashcards-section {
+  background: var(--white);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+/* Here is the Grid */
+#flashcard-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.flashcard-item {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border-left: 4px solid var(--primary);
+  transition: var(--transition);
+}
+
+.flashcard-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard-content {
+  margin-bottom: 15px;
+}
+
+.flashcard-question {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: var(--dark);
+}
+
+.flashcard-answer {
+  color: var(--dark);
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  display: none;
+}
+
+.flashcard-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.flashcard-actions button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.study-btn {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.study-btn:hover {
+  background: var(--primary-dark);
+}
+
+.delete-btn {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+.toggle-answer-btn {
+  background: #2ecc71;
+  color: var(--white);
+}
+
+.toggle-answer-btn:hover {
+  background: #27ae60;
+}
+
+/* ===== STUDY MODE STYLES ===== */
+.study-section {
+  background: var(--white);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin: 30px 0;
+  display: none;
+}
+
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.back-btn {
+  background: none;
+  color: var(--primary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.back-btn:hover {
+  background: rgba(52, 152, 219, 0.1);
+  transform: translateX(-3px);
+}
+
+.study-card-container {
+  margin: 30px 0;
+  perspective: 1000px;
+}
+
+.study-card {
+  position: relative;
+  width: 100%;
+  min-height: 350px;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.study-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.front {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.back {
+  background-color: var(--secondary);
+  color: var(--dark);
+  transform: rotateY(180deg);
+}
+
+.card-content {
+  font-size: 22px;
+  text-align: center;
+  width: 100%;
+  line-height: 1.6;
+}
+
+.study-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 15px;
+}
+
+.study-control-btn {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.study-control-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.flip-btn {
+  background-color: #2ecc71;
+  color: var(--white);
+}
+
+.flip-btn:hover {
+  background-color: #27ae60;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+  display: none;
+}
+
+.no-cards {
+  text-align: center;
+  color: var(--gray);
+  padding: 40px 0;
+}
+
+.error {
+  color: var(--danger);
+  text-align: center;
+  padding: 20px;
+  background: #fdeded;
+  border-radius: 6px;
+  margin: 20px 0;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 15px;
+  }
+
+  .clickable-header {
+    font-size: 20px;
+  }
+
+  .study-card {
+    min-height: 300px;
+  }
+
+  .card-content {
+    font-size: 18px;
+  }
+
+  .study-controls {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .create-section,
+  .flashcards-section,
+  .study-section {
+    padding: 20px;
+  }
+
+  .card-face {
+    padding: 25px;
+  }
+
+  .flashcard-actions {
+    flex-direction: column;
+  }
+
+  .flashcard-actions button {
+    width: 100%;
+  }
+}
+/* Add to your existing button styles */
+.flashcard-actions .edit-btn {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.flashcard-actions .edit-btn:hover {
+  background-color: #45a049;
+}

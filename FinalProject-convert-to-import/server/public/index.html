@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flashcard App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1 id="view-all-cards" class="clickable-header">
+        <i class="fas fa-layer-group"></i> My Flashcards
+      </h1>
+      <div class="card-counter">
+        <span id="card-count">0</span>/<span id="card-limit">20</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- Create Flashcard Section -->
+      <section class="create-section card-style">
+        <h2><i class="fas fa-plus-circle"></i> Create a Flashcard</h2>
+        <form id="flashcard-form">
+          <div class="form-group">
+            <label for="question"><i class="fas fa-question-circle"></i> Question</label>
+            <input type="text" id="question" placeholder="Enter your question..." required />
+          </div>
+          <div class="form-group">
+            <label for="answer"><i class="fas fa-lightbulb"></i> Answer</label>
+            <textarea id="answer" placeholder="Enter the answer..." rows="4" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-save"></i> Add Flashcard
+          </button>
+        </form>
+      </section>
+
+      <!-- Study Mode Section -->
+      <section class="study-section hidden">
+        <div class="study-header">
+          <button id="back-to-list" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to List
+          </button>
+          <div class="study-counter">
+            <span id="current-card">1</span>/<span id="total-cards">0</span>
+          </div>
+        </div>
+        
+        <div class="study-card-container">
+          <div class="study-card">
+            <div class="card-face front">
+              <div id="study-front" class="card-content">Loading cards...</div>
+            </div>
+            <div class="card-face back">
+              <div id="study-back" class="card-content">Flip to see answer</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="study-controls">
+          <button id="study-prev" class="study-control-btn">
+            <i class="fas fa-chevron-left"></i> Previous
+          </button>
+          <button id="study-flip" class="study-control-btn flip-btn">
+            <i class="fas fa-sync-alt"></i> Flip Card
+          </button>
+          <button id="study-next" class="study-control-btn">
+            Next <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- Flashcards List Section -->
+      <section class="flashcards-section">
+        <h2><i class="fas fa-list-ul"></i> Your Flashcards</h2>
+        <div id="flashcard-list" class="card-container">
+          <!-- Flashcards will be dynamically inserted here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="modal hidden">
+    <div class="modal-content">
+      <p id="modal-message">Are you sure you want to delete this flashcard?</p>
+      <div class="modal-buttons">
+        <button id="confirm-cancel" class="modal-btn cancel-btn">Cancel</button>
+        <button id="confirm-delete" class="modal-btn delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
