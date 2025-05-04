@@ -1,331 +1,268 @@
-document.addEventListener('DOMContentLoaded', function () {
-  // Safe DOM element getter with error handling
-  function getElement(id) {
-    const el = document.getElementById(id);
-    if (!el) {
-      console.error(`Element with ID '${id}' not found`);
-      return null;
-    }
-    return el;
-  }
+// ======================
+// CONSTANTS AND UTILITIES
+// ======================
+const API_BASE = '/api/flashcards'; // Updated to match backend
+const TOAST_DURATION = 3000;
 
-  // Get all DOM elements safely
-  const elements = {
-    form: getElement('flashcard-form'),
-    list: getElement('flashcard-list'),
-    heading: getElement('view-all-cards'),
-    studySection: document.querySelector('.study-section'),
-    flashcardsSection: document.querySelector('.flashcards-section'),
-    backToListBtn: getElement('back-to-list'),
-    studyFront: getElement('study-front'),
-    studyBack: getElement('study-back'),
-    studyPrevBtn: getElement('study-prev'),
-    studyNextBtn: getElement('study-next'),
-    studyFlipBtn: getElement('study-flip'),
-    studyCounter: document.querySelector('.study-counter'),
-    cardCounter: document.querySelector('.card-counter'),
-    questionInput: getElement('question'),
-    answerInput: getElement('answer'),
-    errorContainer: getElement('error-container') || document.body
-  };
+// Safe DOM element selector
+const getEl = (selector, parent = document) => {
+  const el = parent.querySelector(selector);
+  if (!el) console.warn(`Element not found: ${selector}`);
+  return el;
+};
 
-  if (!elements.form || !elements.list) {
-    showCriticalError();
-    return;
-  }
+// Display temporary notification
+const showToast = (message, isError = false) => {
+  const toast = document.createElement('div');
+  toast.className = `toast ${isError ? 'error' : 'success'}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), TOAST_DURATION);
+};
 
-  let flashcards = [];
-  let currentCardIndex = 0;
+// Escape HTML for security
+const escapeHtml = (unsafe) => {
+  if (!unsafe) return '';
+  return unsafe.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
 
-  function init() {
+// ======================
+// ADD CARD PAGE
+// ======================
+if (getEl('#add-card-page')) {
+  const form = getEl('#flashcard-form');
+  const submitBtn = getEl('#submit-btn', form);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
     try {
-      setupEventListeners();
-      loadFlashcards();
-    } catch (error) {
-      console.error('Initialization error:', error);
-      showError('Failed to initialize application');
-    }
-  }
+      const formData = new FormData(form);
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: formData.get('question').trim(),
+          answer: formData.get('answer').trim()
+        })
+      });
 
-  function showCriticalError() {
-    document.body.innerHTML = `
-      <div class="error" style="padding: 2rem; text-align: center;">
-        <h2>Application Error</h2>
-        <p>Critical components missing - please refresh the page</p>
-        <button onclick="window.location.reload()" style="padding: 0.5rem 1rem; margin-top: 1rem;">Refresh Page</button>
-      </div>
-    `;
-  }
-
-  function showError(message, element = elements.errorContainer) {
-    element.innerHTML = `
-      <div class="error-message">
-        <p>${message}</p>
-        <button class="retry-btn">Retry</button>
-      </div>
-    `;
-    element.querySelector('.retry-btn').addEventListener('click', () => location.reload());
-  }
-
-  function setupEventListeners() {
-    try {
-      if (elements.heading) elements.heading.addEventListener('click', showAllCards);
-      elements.form.addEventListener('submit', handleFormSubmit);
-      if (elements.backToListBtn) elements.backToListBtn.addEventListener('click', showAllCards);
-      if (elements.studyPrevBtn) elements.studyPrevBtn.addEventListener('click', showPreviousCard);
-      if (elements.studyNextBtn) elements.studyNextBtn.addEventListener('click', showNextCard);
-      if (elements.studyFlipBtn) elements.studyFlipBtn.addEventListener('click', flipCard);
-
-      const studyContainer = document.querySelector('.study-card-container');
-      if (studyContainer) studyContainer.addEventListener('click', flipCard);
-    } catch (error) {
-      console.error('Event listener setup error:', error);
-      showError('Failed to set up event listeners');
-    }
-  }
-
-  function escapeHtml(unsafe) {
-    if (!unsafe) return '';
-    return unsafe.toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-
-  function renderFlashcards() {
-    try {
-      if (!flashcards.length) {
-        elements.list.innerHTML = '<div class="no-cards">No flashcards yet. Add one to get started!</div>';
-        return;
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save flashcard');
       }
 
-      elements.list.innerHTML = flashcards.map((card, index) => `
-        <div class="flashcard-item" data-id="${card.id}">
-          <div class="flashcard-content">
-            <div class="flashcard-question">${escapeHtml(card.question)}</div>
-            <div class="flashcard-answer" style="display: none;">${escapeHtml(card.answer)}</div>
-          </div>
-          <div class="flashcard-actions">
-            <button class="study-btn" data-index="${index}">Study</button>
-            <button class="edit-btn" data-id="${card.id}">Edit</button>
-            <button class="delete-btn" data-id="${card.id}">Delete</button>
-            <button class="toggle-answer-btn">Show Answer</button>
-          </div>
-        </div>
-      `).join('');
-
-      // Attach event listeners to dynamic elements
-      document.querySelectorAll('.study-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          currentCardIndex = parseInt(e.target.dataset.index);
-          showStudySection();
-        });
-      });
-
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', handleDeleteClick);
-      });
-
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', handleEditClick);
-      });
-
-      document.querySelectorAll('.toggle-answer-btn').forEach(btn => {
-        btn.addEventListener('click', toggleAnswerVisibility);
-      });
-
+      showToast('Flashcard created successfully!');
+      form.reset();
+      setTimeout(() => window.location.href = '/view-cards', 1500);
     } catch (error) {
-      console.error('Error rendering flashcards:', error);
-      showError('Failed to display flashcards');
+      showToast(error.message, true);
+      console.error('Submission error:', error);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Flashcard';
     }
-  }
+  });
+}
 
-  function toggleAnswerVisibility(e) {
-    const cardItem = e.target.closest('.flashcard-item');
-    const answer = cardItem.querySelector('.flashcard-answer');
-    const visible = answer.style.display === 'block';
-    answer.style.display = visible ? 'none' : 'block';
-    e.target.textContent = visible ? 'Show Answer' : 'Hide Answer';
-  }
+// ======================
+// VIEW CARDS PAGE
+// ======================
+if (getEl('#view-cards-page')) {
+  const cardList = getEl('#flashcard-list');
+  const cardCount = getEl('#card-count');
+  let flashcards = [];
 
-  async function handleFormSubmit(e) {
-    e.preventDefault();
+  // Format date for display
+  const formatDate = (dateString) => {
+    return dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
+  };
 
-    const question = elements.questionInput.value.trim();
-    const answer = elements.answerInput.value.trim();
-
-    if (!question || !answer) {
-      showError('Please fill in both question and answer fields');
+  // Render flashcards to DOM
+  const renderFlashcards = () => {
+    if (!flashcards.length) {
+      cardList.innerHTML = '<div class="no-cards">No flashcards yet. Add one to get started!</div>';
+      cardCount.textContent = '0';
       return;
     }
 
-    try {
-      const response = await fetch('/api/flashcards', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, answer })
+    cardList.innerHTML = flashcards.map(card => `
+      <div class="flashcard-item" data-id="${card.id}">
+        <div class="card-content">
+          <h3>${escapeHtml(card.question)}</h3>
+          <div class="card-meta">
+            <span>Created: ${formatDate(card.created_at)}</span>
+            ${card.updated_at ? `<span> | Updated: ${formatDate(card.updated_at)}</span>` : ''}
+          </div>
+        </div>
+        <div class="card-actions">
+          <button class="btn study-btn" data-id="${card.id}">
+            <i class="fas fa-book-open"></i> Study
+          </button>
+          <button class="btn delete-btn" data-id="${card.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach event listeners
+    document.querySelectorAll('.study-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        window.location.href = '/study-mode';
       });
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save flashcard');
-      }
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', handleDelete);
+    });
+  };
 
-      const newCard = await response.json();
-      flashcards.push(newCard);
-      renderFlashcards();
-      updateCounters();
-      elements.form.reset();
-
-    } catch (error) {
-      console.error('Save failed:', error);
-      showError(error.message || 'Could not save flashcard. Please try again.');
-    }
-  }
-
-  async function handleEditClick(e) {
-    const cardId = e.target.dataset.id;
-    const card = flashcards.find(card => card.id === cardId);
-    
-    if (!card) return;
-
-    const newQuestion = prompt('Edit Question:', card.question);
-    if (newQuestion === null) return;
-
-    const newAnswer = prompt('Edit Answer:', card.answer);
-    if (newAnswer === null) return;
+  // Delete flashcard
+  const handleDelete = async (e) => {
+    const cardId = e.currentTarget.dataset.id;
+    if (!confirm('Delete this flashcard permanently?')) return;
 
     try {
-      const response = await fetch(`/api/flashcards/${cardId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: newQuestion, answer: newAnswer })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Update failed');
-      }
-
-      const updatedCard = await response.json();
-      Object.assign(card, updatedCard);
-      renderFlashcards();
-      
-      if (elements.studySection.style.display === 'block' && 
-          flashcards[currentCardIndex]?.id === cardId) {
-        updateStudyCard();
-      }
-
-    } catch (error) {
-      console.error('Edit failed:', error);
-      showError(error.message || 'Could not update flashcard. Please try again.');
-    }
-  }
-
-  async function handleDeleteClick(e) {
-    const cardId = e.target.dataset.id;
-    if (!confirm('Are you sure you want to delete this flashcard?')) return;
-
-    try {
-      const response = await fetch(`/api/flashcards/${cardId}`, { 
+      const response = await fetch(`${API_BASE}/${cardId}`, { 
         method: 'DELETE' 
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Delete failed');
+        const error = await response.json();
+        throw new Error(error.message || 'Delete failed');
       }
 
       flashcards = flashcards.filter(card => card.id !== cardId);
       renderFlashcards();
-      updateCounters();
-
-      if (elements.studySection.style.display === 'block') {
-        if (flashcards.length === 0) {
-          showAllCards();
-        } else if (currentCardIndex >= flashcards.length) {
-          currentCardIndex = flashcards.length - 1;
-          updateStudyCard();
-        }
-      }
-
+      showToast('Flashcard deleted successfully');
     } catch (error) {
-      console.error('Delete failed:', error);
-      showError(error.message || 'Could not delete flashcard. Please try again.');
+      showToast(error.message, true);
+      console.error('Delete error:', error);
     }
-  }
+  };
 
-  async function loadFlashcards() {
+  // Load all flashcards
+  const loadFlashcards = async () => {
     try {
-      const response = await fetch('/api/flashcards');
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Load failed');
-      }
-
-      const data = await response.json();
-      if (!Array.isArray(data)) throw new Error("Invalid data format");
-
-      flashcards = data;
+      const response = await fetch(API_BASE);
+      if (!response.ok) throw new Error('Failed to load flashcards');
+      
+      flashcards = await response.json();
       renderFlashcards();
-      updateCounters();
-
     } catch (error) {
-      console.error('Load failed:', error);
-      showError(error.message || 'Failed to load flashcards. Please refresh.');
+      showToast(error.message, true);
+      console.error('Load error:', error);
     }
-  }
+  };
 
-  function updateCounters() {
-    if (elements.cardCounter) {
-      elements.cardCounter.textContent = `${flashcards.length} card${flashcards.length !== 1 ? 's' : ''}`;
+  // Initialize
+  loadFlashcards();
+}
+
+// ======================
+// STUDY MODE PAGE
+// ======================
+if (getEl('#study-mode-page')) {
+  const studyFront = getEl('#study-front');
+  const studyBack = getEl('#study-back');
+  const currentCardEl = getEl('#current-card');
+  const totalCardsEl = getEl('#total-cards');
+  const prevBtn = getEl('#study-prev');
+  const nextBtn = getEl('#study-next');
+  const flipBtn = getEl('#study-flip');
+  const studyCard = getEl('.study-card');
+  const backBtn = getEl('#back-to-list');
+
+  let flashcards = [];
+  let currentIndex = 0;
+  let isFlipped = false;
+
+  // Load flashcards for study
+  const loadStudyCards = async () => {
+    try {
+      const response = await fetch(API_BASE);
+      if (!response.ok) throw new Error('Failed to load flashcards');
+      
+      flashcards = await response.json();
+      if (flashcards.length === 0) {
+        studyFront.textContent = 'No flashcards available';
+        return;
+      }
+      
+      totalCardsEl.textContent = flashcards.length;
+      showCard();
+    } catch (error) {
+      studyFront.textContent = 'Error loading flashcards';
+      showToast(error.message, true);
+      console.error('Study load error:', error);
     }
-  }
+  };
 
-  function showAllCards() {
-    if (elements.studySection) elements.studySection.style.display = 'none';
-    if (elements.flashcardsSection) elements.flashcardsSection.style.display = 'block';
-  }
-
-  function showStudySection() {
-    if (!flashcards.length) return;
-    if (elements.flashcardsSection) elements.flashcardsSection.style.display = 'none';
-    if (elements.studySection) elements.studySection.style.display = 'block';
-    updateStudyCard();
-  }
-
-  function updateStudyCard() {
-    if (!flashcards.length) return;
-
-    const card = flashcards[currentCardIndex];
-    if (elements.studyFront) elements.studyFront.textContent = card.question;
-    if (elements.studyBack) elements.studyBack.textContent = card.answer;
-    if (elements.studyCounter) {
-      elements.studyCounter.textContent = `${currentCardIndex + 1}/${flashcards.length}`;
+  // Show current card
+  const showCard = () => {
+    const card = flashcards[currentIndex];
+    studyFront.textContent = card.question;
+    studyBack.textContent = card.answer;
+    currentCardEl.textContent = currentIndex + 1;
+    
+    if (isFlipped) {
+      studyCard.classList.add('flipped');
+    } else {
+      studyCard.classList.remove('flipped');
     }
+  };
 
-    const studyCard = document.querySelector('.study-card');
-    if (studyCard) studyCard.classList.remove('flipped');
-  }
+  // Event listeners
+  flipBtn.addEventListener('click', () => {
+    isFlipped = !isFlipped;
+    studyCard.classList.toggle('flipped');
+  });
 
-  function showNextCard() {
-    if (!flashcards.length) return;
-    currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-    updateStudyCard();
-  }
+  prevBtn.addEventListener('click', () => {
+    if (flashcards.length === 0) return;
+    currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+    isFlipped = false;
+    showCard();
+  });
 
-  function showPreviousCard() {
-    if (!flashcards.length) return;
-    currentCardIndex = (currentCardIndex - 1 + flashcards.length) % flashcards.length;
-    updateStudyCard();
-  }
+  nextBtn.addEventListener('click', () => {
+    if (flashcards.length === 0) return;
+    currentIndex = (currentIndex + 1) % flashcards.length;
+    isFlipped = false;
+    showCard();
+  });
 
-  function flipCard() {
-    const studyCard = document.querySelector('.study-card');
-    if (studyCard) studyCard.classList.toggle('flipped');
-  }
+  backBtn.addEventListener('click', () => {
+    window.location.href = '/view-cards';
+  });
 
-  init();
-});
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (flashcards.length === 0) return;
+    
+    switch (e.key) {
+      case 'ArrowLeft':
+        prevBtn.click();
+        break;
+      case 'ArrowRight':
+        nextBtn.click();
+        break;
+      case ' ':
+      case 'Enter':
+        flipBtn.click();
+        e.preventDefault();
+        break;
+    }
+  });
+
+  // Initialize
+  loadStudyCards();
+}

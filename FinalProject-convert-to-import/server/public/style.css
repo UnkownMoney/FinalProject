@@ -4,6 +4,7 @@
   --primary-dark: #2980b9;
   --secondary: #f1c40f;
   --danger: #e74c3c;
+  --success: #2ecc71;
   --light: #f8f9fa;
   --dark: #2c3e50;
   --gray: #7f8c8d;
@@ -32,7 +33,7 @@ body {
   min-height: 100vh;
 }
 
-/* ===== HEADER STYLES ===== */
+/* ===== HEADER & NAVIGATION STYLES ===== */
 header {
   display: flex;
   justify-content: space-between;
@@ -40,6 +41,29 @@ header {
   margin-bottom: 30px;
   padding-bottom: 15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  background-color: var(--primary);
+  color: var(--white);
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.nav-link:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
 .clickable-header {
@@ -142,7 +166,12 @@ textarea {
   transform: translateY(-2px);
 }
 
-/* ===== UPDATED FLASHCARD LIST STYLES ===== */
+.submit-btn:disabled {
+  background-color: var(--gray);
+  cursor: not-allowed;
+}
+
+/* ===== FLASHCARD LIST STYLES ===== */
 .flashcards-section {
   background: var(--white);
   padding: 25px;
@@ -150,7 +179,6 @@ textarea {
   box-shadow: var(--shadow);
 }
 
-/* Here is the Grid */
 #flashcard-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -164,6 +192,8 @@ textarea {
   padding: 20px;
   border-left: 4px solid var(--primary);
   transition: var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .flashcard-item:hover {
@@ -173,6 +203,7 @@ textarea {
 
 .flashcard-content {
   margin-bottom: 15px;
+  flex-grow: 1;
 }
 
 .flashcard-question {
@@ -190,13 +221,20 @@ textarea {
   display: none;
 }
 
-.flashcard-actions {
-  display: flex;
-  gap: 10px;
+.flashcard-meta {
+  font-size: 0.8rem;
+  color: var(--gray);
+  margin-top: 10px;
 }
 
-.flashcard-actions button {
-  padding: 8px 15px;
+.flashcard-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.btn {
+  padding: 8px 12px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -207,6 +245,10 @@ textarea {
   gap: 5px;
 }
 
+.btn i {
+  font-size: 0.9em;
+}
+
 .study-btn {
   background: var(--primary);
   color: var(--white);
@@ -214,6 +256,15 @@ textarea {
 
 .study-btn:hover {
   background: var(--primary-dark);
+}
+
+.edit-btn {
+  background: var(--success);
+  color: var(--white);
+}
+
+.edit-btn:hover {
+  background: #27ae60;
 }
 
 .delete-btn {
@@ -226,12 +277,12 @@ textarea {
 }
 
 .toggle-answer-btn {
-  background: #2ecc71;
+  background: #9b59b6;
   color: var(--white);
 }
 
 .toggle-answer-btn:hover {
-  background: #27ae60;
+  background: #8e44ad;
 }
 
 /* ===== STUDY MODE STYLES ===== */
@@ -241,7 +292,6 @@ textarea {
   border-radius: 10px;
   box-shadow: var(--shadow);
   margin: 30px 0;
-  display: none;
 }
 
 .study-header {
@@ -268,6 +318,11 @@ textarea {
 .back-btn:hover {
   background: rgba(52, 152, 219, 0.1);
   transform: translateX(-3px);
+}
+
+.study-counter {
+  font-size: 16px;
+  color: var(--gray);
 }
 
 .study-card-container {
@@ -347,43 +402,99 @@ textarea {
   box-shadow: var(--shadow);
 }
 
+.study-control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .flip-btn {
-  background-color: #2ecc71;
+  background-color: #9b59b6;
   color: var(--white);
 }
 
 .flip-btn:hover {
-  background-color: #27ae60;
+  background-color: #8e44ad;
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1000;
+  animation: fadeIn 0.3s;
+  box-shadow: var(--shadow);
+}
+
+.toast.success {
+  background-color: var(--success);
+}
+
+.toast.error {
+  background-color: var(--danger);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== UTILITY CLASSES ===== */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .no-cards {
   text-align: center;
   color: var(--gray);
   padding: 40px 0;
+  grid-column: 1 / -1;
 }
 
-.error {
+.error-message {
   color: var(--danger);
   text-align: center;
-  padding: 20px;
+  padding: 15px;
   background: #fdeded;
   border-radius: 6px;
   margin: 20px 0;
 }
 
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
 /* ===== RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 768px) {
-  .app-container {
+  body {
     padding: 15px;
   }
 
-  .clickable-header {
-    font-size: 20px;
+  .app-container {
+    max-width: 100%;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-link {
+    flex: 1;
+    text-align: center;
   }
 
   .study-card {
@@ -397,15 +508,13 @@ textarea {
   .study-controls {
     flex-direction: column;
   }
+
+  .study-control-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
   .create-section,
   .flashcards-section,
   .study-section {
@@ -420,22 +529,8 @@ textarea {
     flex-direction: column;
   }
 
-  .flashcard-actions button {
+  .flashcard-actions .btn {
     width: 100%;
+    justify-content: center;
   }
-}
-/* Add to your existing button styles */
-.flashcard-actions .edit-btn {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.flashcard-actions .edit-btn:hover {
-  background-color: #45a049;
 }

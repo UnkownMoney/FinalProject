@@ -9,34 +9,59 @@ import { dirname } from 'path';
 dotenv.config();
 
 const app = express();
-
-// Handle __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
+// Enhanced CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
-// API Routes
-app.use('/api/flashcards', flashcardRoutes); // All flashcard CRUD operations
+// Middleware - order matters!
+app.use(express.json()); // MUST come before routes
+app.use(express.urlencoded({ extended: true }));
 
-// Basic route
+// API Routes - mounted before static files
+app.use('/api/flashcards', flashcardRoutes);
+
+// Serve static files (HTML, JS, CSS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// HTML page routes
 app.get('/', (req, res) => {
-  res.send('Welcome to the Flashcard API!');
+  res.sendFile(path.join(__dirname, 'public', 'view-cards.html'));
 });
 
-// 404 Handler
+app.get('/add-card', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'add-card.html'));
+});
+
+app.get('/study-mode', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'study-mode.html'));
+});
+
+// Debugging middleware (temporary)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// Error handlers
 app.use((req, res) => {
+  console.warn(`404: ${req.method} ${req.originalUrl}`);
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error(`500: ${err.stack}`);
   res.status(500).json({ message: 'Internal server error' });
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`API Base: /api/flashcards`);
+  console.log(`Static files served from: ${path.join(__dirname, 'public')}`);
+});

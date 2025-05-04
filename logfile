@@ -1,0 +1,45 @@
+2025-04-30 02:56:06.130 UTC [20311] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-04-30 02:56:06.130 UTC [20311] LOG:  listening on IPv6 address "::1", port 5432
+2025-04-30 02:56:06.130 UTC [20311] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-30 02:56:06.132 UTC [20311] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-04-30 02:56:06.137 UTC [20314] LOG:  database system was shut down at 2025-04-30 02:55:51 UTC
+2025-04-30 02:56:06.143 UTC [20311] LOG:  database system is ready to accept connections
+2025-04-30 03:01:06.225 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:01:10.352 UTC [20312] LOG:  checkpoint complete: wrote 44 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.109 s, sync=0.013 s, total=4.127 s; sync files=22, longest=0.002 s, average=0.001 s; distance=261 kB, estimate=261 kB; lsn=0/154C990, redo lsn=0/1523420
+2025-04-30 03:04:34.360 UTC [20459] ERROR:  syntax error at or near "dt" at character 1
+2025-04-30 03:04:34.360 UTC [20459] STATEMENT:  dt
+	createdb -U vance flashcardsdb
+	psql -U vance -d flashcardsdb
+	CREATE USER vance WITH PASSWORD 'vancepass';
+2025-04-30 03:04:45.305 UTC [20459] ERROR:  syntax error at or near "createdb" at character 1
+2025-04-30 03:04:45.305 UTC [20459] STATEMENT:  createdb -U vance flashcardsdb
+	psql -U vance -d flashcardsdb
+	CREATE USER vance WITH PASSWORD vancepass;
+2025-04-30 03:06:23.112 UTC [25083] FATAL:  role "vance" does not exist
+2025-04-30 03:07:52.678 UTC [25838] FATAL:  database "flashcardsdb" does not exist
+2025-04-30 03:08:01.894 UTC [25973] FATAL:  database "flashcarddb" does not exist
+2025-04-30 03:11:06.534 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:12:42.922 UTC [28337] FATAL:  role "codespace" does not exist
+2025-04-30 03:12:45.059 UTC [20312] LOG:  checkpoint complete: wrote 984 buffers (6.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=98.395 s, sync=0.125 s, total=98.525 s; sync files=348, longest=0.008 s, average=0.001 s; distance=4419 kB, estimate=4419 kB; lsn=0/199D9C8, redo lsn=0/1974190
+2025-04-30 03:14:11.859 UTC [29095] FATAL:  role "codespace" does not exist
+2025-04-30 03:16:06.136 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:16:07.953 UTC [20312] LOG:  checkpoint complete: wrote 19 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.805 s, sync=0.008 s, total=1.817 s; sync files=15, longest=0.002 s, average=0.001 s; distance=166 kB, estimate=3994 kB; lsn=0/199DB28, redo lsn=0/199DAF0
+2025-04-30 03:36:35.526 UTC [38851] ERROR:  column "updated_at" of relation "flashcards" does not exist at character 59
+2025-04-30 03:36:35.526 UTC [38851] STATEMENT:  UPDATE flashcards 
+	       SET question = $1, answer = $2, updated_at = NOW() 
+	       WHERE id = $3 
+	       RETURNING *
+2025-04-30 03:39:21.037 UTC [40341] ERROR:  column "updated_at" of relation "flashcards" does not exist at character 59
+2025-04-30 03:39:21.037 UTC [40341] STATEMENT:  UPDATE flashcards 
+	       SET question = $1, answer = $2, updated_at = NOW() 
+	       WHERE id = $3 
+	       RETURNING *
+2025-04-30 03:40:24.209 UTC [40814] ERROR:  column "updated_at" of relation "flashcards" does not exist at character 59
+2025-04-30 03:40:24.209 UTC [40814] STATEMENT:  UPDATE flashcards 
+	       SET question = $1, answer = $2, updated_at = NOW() 
+	       WHERE id = $3 
+	       RETURNING *
+2025-04-30 03:41:07.361 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:41:07.871 UTC [20312] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.004 s, total=0.511 s; sync files=5, longest=0.002 s, average=0.001 s; distance=1 kB, estimate=3594 kB; lsn=0/199E300, redo lsn=0/199E2C8
+2025-04-30 03:46:07.971 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:46:09.084 UTC [20312] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.103 s, sync=0.005 s, total=1.113 s; sync files=12, longest=0.002 s, average=0.001 s; distance=37 kB, estimate=3239 kB; lsn=0/19A7A58, redo lsn=0/19A7A20
