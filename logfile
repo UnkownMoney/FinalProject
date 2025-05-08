@@ -43,3 +43,258 @@
 2025-04-30 03:41:07.871 UTC [20312] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.004 s, total=0.511 s; sync files=5, longest=0.002 s, average=0.001 s; distance=1 kB, estimate=3594 kB; lsn=0/199E300, redo lsn=0/199E2C8
 2025-04-30 03:46:07.971 UTC [20312] LOG:  checkpoint starting: time
 2025-04-30 03:46:09.084 UTC [20312] LOG:  checkpoint complete: wrote 12 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=1.103 s, sync=0.005 s, total=1.113 s; sync files=12, longest=0.002 s, average=0.001 s; distance=37 kB, estimate=3239 kB; lsn=0/19A7A58, redo lsn=0/19A7A20
+2025-04-30 03:51:07.175 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:51:07.282 UTC [20312] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.002 s, total=0.107 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=2915 kB; lsn=0/19A7E00, redo lsn=0/19A7DC8
+2025-04-30 03:56:07.382 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 03:56:07.690 UTC [20312] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.309 s; sync files=4, longest=0.002 s, average=0.001 s; distance=1 kB, estimate=2623 kB; lsn=0/19A8490, redo lsn=0/19A8458
+2025-04-30 04:01:07.716 UTC [20312] LOG:  checkpoint starting: time
+2025-04-30 04:01:08.025 UTC [20312] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2361 kB; lsn=0/19A8E70, redo lsn=0/19A8E38
+2025-04-30 15:11:59.489 UTC [3721] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-04-30 15:11:59.495 UTC [3721] LOG:  listening on IPv6 address "::1", port 5432
+2025-04-30 15:11:59.498 UTC [3721] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-30 15:11:59.504 UTC [3721] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-04-30 15:11:59.944 UTC [3738] LOG:  database system was interrupted; last known up at 2025-04-30 04:01:08 UTC
+2025-04-30 15:12:00.594 UTC [3738] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-30 15:12:00.598 UTC [3738] LOG:  redo starts at 0/19A8E38
+2025-04-30 15:12:00.599 UTC [3738] LOG:  invalid record length at 0/19A8F20: expected at least 24, got 0
+2025-04-30 15:12:00.599 UTC [3738] LOG:  redo done at 0/19A8EE8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-30 15:12:00.603 UTC [3736] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-30 15:12:00.610 UTC [3736] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19A8F20, redo lsn=0/19A8F20
+2025-04-30 15:12:00.615 UTC [3721] LOG:  database system is ready to accept connections
+2025-04-30 15:22:00.713 UTC [3736] LOG:  checkpoint starting: time
+2025-04-30 15:22:01.122 UTC [3736] LOG:  checkpoint complete: wrote 5 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.402 s, sync=0.003 s, total=0.409 s; sync files=5, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/19A9830, redo lsn=0/19A97F8
+2025-04-30 15:27:00.136 UTC [3736] LOG:  checkpoint starting: time
+2025-04-30 15:27:00.445 UTC [3736] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.003 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/19AA1A8, redo lsn=0/19AA170
+2025-04-30 15:32:00.544 UTC [3736] LOG:  checkpoint starting: time
+2025-04-30 15:32:00.853 UTC [3736] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.309 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/19AAAC8, redo lsn=0/19AAA90
+2025-04-30 19:01:33.333 UTC [7718] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-04-30 19:01:33.334 UTC [7718] LOG:  listening on IPv6 address "::1", port 5432
+2025-04-30 19:01:33.334 UTC [7718] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-30 19:01:33.339 UTC [7718] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-04-30 19:01:33.360 UTC [7721] LOG:  database system was interrupted; last known up at 2025-04-30 15:32:00 UTC
+2025-04-30 19:01:33.550 UTC [7721] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-04-30 19:01:33.553 UTC [7721] LOG:  redo starts at 0/19AAA90
+2025-04-30 19:01:33.553 UTC [7721] LOG:  invalid record length at 0/19AAB78: expected at least 24, got 0
+2025-04-30 19:01:33.553 UTC [7721] LOG:  redo done at 0/19AAB40 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-04-30 19:01:33.558 UTC [7719] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-04-30 19:01:33.565 UTC [7719] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.009 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19AAB78, redo lsn=0/19AAB78
+2025-04-30 19:01:33.570 UTC [7718] LOG:  database system is ready to accept connections
+2025-05-04 00:55:52.880 UTC [7924] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-04 00:55:52.881 UTC [7924] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-04 00:55:52.882 UTC [7924] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-04 00:55:52.884 UTC [7924] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-04 00:55:52.901 UTC [7927] LOG:  database system was interrupted; last known up at 2025-04-30 19:01:33 UTC
+2025-05-04 00:55:53.044 UTC [7927] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-04 00:55:53.047 UTC [7927] LOG:  redo starts at 0/19AABF0
+2025-05-04 00:55:53.048 UTC [7927] LOG:  invalid record length at 0/19AAC28: expected at least 24, got 0
+2025-05-04 00:55:53.048 UTC [7927] LOG:  redo done at 0/19AABF0 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-04 00:55:53.052 UTC [7925] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-04 00:55:53.058 UTC [7925] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.007 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19AAC28, redo lsn=0/19AAC28
+2025-05-04 00:55:53.064 UTC [7924] LOG:  database system is ready to accept connections
+2025-05-04 01:00:53.153 UTC [7925] LOG:  checkpoint starting: time
+2025-05-04 01:00:53.462 UTC [7925] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.301 s, sync=0.003 s, total=0.309 s; sync files=3, longest=0.002 s, average=0.001 s; distance=8 kB, estimate=8 kB; lsn=0/19ACCB8, redo lsn=0/19ACC80
+2025-05-04 01:15:53.757 UTC [7925] LOG:  checkpoint starting: time
+2025-05-04 01:15:54.066 UTC [7925] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=7 kB; lsn=0/19AD628, redo lsn=0/19AD5F0
+2025-05-04 02:20:53.960 UTC [7925] LOG:  checkpoint starting: time
+2025-05-04 02:20:54.269 UTC [7925] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=7 kB; lsn=0/19ADFF0, redo lsn=0/19ADFB8
+2025-05-05 15:29:19.246 UTC [3822] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-05 15:29:19.282 UTC [3822] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-05 15:29:19.282 UTC [3822] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-05 15:29:19.286 UTC [3822] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-05 15:29:19.306 UTC [3825] LOG:  database system was interrupted; last known up at 2025-05-04 02:20:54 UTC
+2025-05-05 15:29:19.486 UTC [3825] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-05 15:29:19.489 UTC [3825] LOG:  redo starts at 0/19ADFB8
+2025-05-05 15:29:19.489 UTC [3825] LOG:  invalid record length at 0/19AE0B8: expected at least 24, got 0
+2025-05-05 15:29:19.489 UTC [3825] LOG:  redo done at 0/19AE080 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-05 15:29:19.497 UTC [3823] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-05 15:29:19.504 UTC [3823] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.009 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19AE0B8, redo lsn=0/19AE0B8
+2025-05-05 15:29:19.510 UTC [3822] LOG:  database system is ready to accept connections
+2025-05-05 16:06:59.100 UTC [20498] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:06:59.100 UTC [20498] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:06:59.100 UTC [20498] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:07:17.528 UTC [20624] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:07:17.528 UTC [20624] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:07:17.528 UTC [20624] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:07:31.717 UTC [20740] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:07:31.717 UTC [20740] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:07:31.717 UTC [20740] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:09:20.035 UTC [3823] LOG:  checkpoint starting: time
+2025-05-05 16:09:20.344 UTC [3823] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.002 s, total=0.309 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/19AEBF0, redo lsn=0/19AEBB8
+2025-05-05 16:13:34.502 UTC [4223] ERROR:  column "updated_at" of relation "flashcards" already exists
+2025-05-05 16:13:34.502 UTC [4223] STATEMENT:  ALTER TABLE flashcards 
+	ADD COLUMN created_at TIMESTAMP DEFAULT NOW(),
+	ADD COLUMN updated_at TIMESTAMP DEFAULT NOW();
+2025-05-05 16:14:20.360 UTC [3823] LOG:  checkpoint starting: time
+2025-05-05 16:14:23.181 UTC [3823] LOG:  checkpoint complete: wrote 29 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.806 s, sync=0.011 s, total=2.821 s; sync files=23, longest=0.003 s, average=0.001 s; distance=80 kB, estimate=80 kB; lsn=0/19C2E98, redo lsn=0/19C2E60
+2025-05-05 16:14:34.514 UTC [24394] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:14:34.514 UTC [24394] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:14:34.514 UTC [24394] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:14:48.552 UTC [24486] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:14:48.552 UTC [24486] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:14:48.552 UTC [24486] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:14:59.414 UTC [24585] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:14:59.414 UTC [24585] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:14:59.414 UTC [24585] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:18:12.148 UTC [26044] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:18:12.148 UTC [26044] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:18:12.148 UTC [26044] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:19:20.254 UTC [3823] LOG:  checkpoint starting: time
+2025-05-05 16:19:20.763 UTC [3823] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.502 s, sync=0.004 s, total=0.510 s; sync files=6, longest=0.002 s, average=0.001 s; distance=3 kB, estimate=72 kB; lsn=0/19C3AA0, redo lsn=0/19C3A68
+2025-05-05 16:22:50.251 UTC [28068] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:22:50.251 UTC [28068] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:22:50.251 UTC [28068] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:22:53.759 UTC [28095] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:22:53.759 UTC [28095] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:22:53.759 UTC [28095] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:23:47.026 UTC [28568] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:23:47.026 UTC [28568] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:23:47.026 UTC [28568] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:23:49.726 UTC [28611] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:23:49.726 UTC [28611] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:23:49.726 UTC [28611] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:24:30.471 UTC [28986] ERROR:  column "created_at" does not exist at character 35
+2025-05-05 16:24:30.471 UTC [28986] HINT:  Perhaps you meant to reference the column "flashcards.updated_at".
+2025-05-05 16:24:30.471 UTC [28986] STATEMENT:  
+	      SELECT *, 
+	        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
+	        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+	      FROM flashcards 
+	      ORDER BY id DESC
+	    
+2025-05-05 16:34:20.996 UTC [3823] LOG:  checkpoint starting: time
+2025-05-05 16:34:23.212 UTC [3823] LOG:  checkpoint complete: wrote 23 buffers (0.1%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.205 s, sync=0.008 s, total=2.217 s; sync files=19, longest=0.002 s, average=0.001 s; distance=92 kB, estimate=92 kB; lsn=0/19DAD18, redo lsn=0/19DACE0
+2025-05-05 16:59:20.520 UTC [3823] LOG:  checkpoint starting: time
+2025-05-05 16:59:20.830 UTC [3823] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=83 kB; lsn=0/19DB8D8, redo lsn=0/19DB8A0
+2025-05-05 17:03:02.132 UTC [45617] ERROR:  invalid input syntax for type bigint: "null"
+2025-05-05 17:03:02.132 UTC [45617] CONTEXT:  unnamed portal parameter $1 = '...'
+2025-05-05 17:03:02.132 UTC [45617] STATEMENT:  DELETE FROM flashcards 
+	       WHERE id = $1 
+	       RETURNING id
+2025-05-06 16:24:28.792 UTC [3503] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-06 16:24:28.797 UTC [3503] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-06 16:24:28.797 UTC [3503] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-06 16:24:28.804 UTC [3503] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-06 16:24:28.834 UTC [3507] LOG:  database system was interrupted; last known up at 2025-05-05 16:59:20 UTC
+2025-05-06 16:24:29.038 UTC [3507] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-06 16:24:29.049 UTC [3507] LOG:  redo starts at 0/19DB8A0
+2025-05-06 16:24:29.049 UTC [3507] LOG:  invalid record length at 0/19DB988: expected at least 24, got 0
+2025-05-06 16:24:29.049 UTC [3507] LOG:  redo done at 0/19DB950 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-06 16:24:29.054 UTC [3505] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-06 16:24:29.061 UTC [3505] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DB988, redo lsn=0/19DB988
+2025-05-06 16:24:29.068 UTC [3503] LOG:  database system is ready to accept connections
+2025-05-06 16:30:16.076 UTC [6443] ERROR:  invalid input syntax for type bigint: "null"
+2025-05-06 16:30:16.076 UTC [6443] CONTEXT:  unnamed portal parameter $1 = '...'
+2025-05-06 16:30:16.076 UTC [6443] STATEMENT:  DELETE FROM flashcards 
+	       WHERE id = $1 
+	       RETURNING id
+2025-05-06 16:30:16.674 UTC [6445] ERROR:  invalid input syntax for type bigint: "null"
+2025-05-06 16:30:16.674 UTC [6445] CONTEXT:  unnamed portal parameter $1 = '...'
+2025-05-06 16:30:16.674 UTC [6445] STATEMENT:  DELETE FROM flashcards 
+	       WHERE id = $1 
+	       RETURNING id
+2025-05-06 16:39:29.341 UTC [3505] LOG:  checkpoint starting: time
+2025-05-06 16:39:29.649 UTC [3505] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.309 s; sync files=4, longest=0.002 s, average=0.001 s; distance=3 kB, estimate=3 kB; lsn=0/19DC5D8, redo lsn=0/19DC5A0
+2025-05-06 18:32:34.471 UTC [3999] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-06 18:32:34.477 UTC [3999] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-06 18:32:34.477 UTC [3999] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-06 18:32:34.483 UTC [3999] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-06 18:32:35.671 UTC [4045] LOG:  database system was interrupted; last known up at 2025-05-06 16:39:29 UTC
+2025-05-06 18:32:36.560 UTC [4045] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-06 18:32:36.566 UTC [4045] LOG:  redo starts at 0/19DC5A0
+2025-05-06 18:32:36.566 UTC [4045] LOG:  invalid record length at 0/19DC688: expected at least 24, got 0
+2025-05-06 18:32:36.566 UTC [4045] LOG:  redo done at 0/19DC650 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-06 18:32:36.628 UTC [4043] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-06 18:32:36.633 UTC [4043] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.007 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DC688, redo lsn=0/19DC688
+2025-05-06 18:32:36.640 UTC [3999] LOG:  database system is ready to accept connections
+2025-05-06 18:42:36.735 UTC [4043] LOG:  checkpoint starting: time
+2025-05-06 18:42:37.044 UTC [4043] LOG:  checkpoint complete: wrote 4 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.302 s, sync=0.003 s, total=0.310 s; sync files=4, longest=0.002 s, average=0.001 s; distance=3 kB, estimate=3 kB; lsn=0/19DD310, redo lsn=0/19DD2D8
+2025-05-07 02:46:16.511 UTC [3953] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-07 02:46:16.513 UTC [3953] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-07 02:46:16.513 UTC [3953] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-07 02:46:16.519 UTC [3953] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-07 02:46:16.535 UTC [3957] LOG:  database system was interrupted; last known up at 2025-05-06 18:42:37 UTC
+2025-05-07 02:46:16.696 UTC [3957] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-07 02:46:16.699 UTC [3957] LOG:  redo starts at 0/19DD2D8
+2025-05-07 02:46:16.699 UTC [3957] LOG:  invalid record length at 0/19DD3C0: expected at least 24, got 0
+2025-05-07 02:46:16.699 UTC [3957] LOG:  redo done at 0/19DD388 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-07 02:46:16.704 UTC [3955] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-07 02:46:16.710 UTC [3955] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DD3C0, redo lsn=0/19DD3C0
+2025-05-07 02:46:16.714 UTC [3953] LOG:  database system is ready to accept connections
+2025-05-08 03:44:57.705 UTC [3469] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-08 03:44:57.706 UTC [3469] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-08 03:44:57.706 UTC [3469] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-08 03:44:57.709 UTC [3469] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-08 03:44:58.061 UTC [3503] LOG:  database system was interrupted; last known up at 2025-05-07 02:46:16 UTC
+2025-05-08 03:44:58.847 UTC [3503] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-08 03:44:58.854 UTC [3503] LOG:  redo starts at 0/19DD438
+2025-05-08 03:44:58.854 UTC [3503] LOG:  invalid record length at 0/19DD470: expected at least 24, got 0
+2025-05-08 03:44:58.854 UTC [3503] LOG:  redo done at 0/19DD438 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-08 03:44:58.860 UTC [3501] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-08 03:44:58.866 UTC [3501] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DD470, redo lsn=0/19DD470
+2025-05-08 03:44:58.872 UTC [3469] LOG:  database system is ready to accept connections
