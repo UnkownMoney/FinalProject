@@ -1,49 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Mode</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-  <div class="app-container">
-    <header>
-      <button id="back-to-list" class="back-btn">
-        <i class="fas fa-arrow-left"></i> Back to List
-      </button>
-      <div class="study-counter">
-        <span id="current-card">1</span>/<span id="total-cards">0</span>
-      </div>
-    </header>
+document.addEventListener('DOMContentLoaded', async () => {
+  let flashcards = [];
+  let currentIndex = 0;
 
-    <main class="study-main">
-      <div class="study-card-container">
-        <div class="study-card">
-          <div class="card-face front">
-            <div id="study-front" class="card-content">Loading cards...</div>
-          </div>
-          <div class="card-face back">
-            <div id="study-back" class="card-content">Flip to see answer</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="study-controls">
-        <button id="study-prev" class="study-control-btn">
-          <i class="fas fa-chevron-left"></i> Previous
-        </button>
-        <button id="study-flip" class="study-control-btn flip-btn">
-          <i class="fas fa-sync-alt"></i> Flip Card
-        </button>
-        <button id="study-next" class="study-control-btn">
-          Next <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </main>
-  </div>
+  // Fetch flashcards from API
+  async function loadFlashcards() {
+    try {
+      const response = await fetch('/api/flashcards');
+      if (!response.ok) throw new Error('Failed to load cards');
+      flashcards = await response.json();
+      updateCardCounter();
+      showCurrentCard();
+    } catch (err) {
+      console.error('Error:', err);
+      document.getElementById('study-front').textContent = 'Error loading cards';
+    }
+  }
 
-  <script src="script.js"></script>
-</body>
-</html>
+  // Navigation functions
+  function showCurrentCard() {
+    if (flashcards.length === 0) return;
+    document.getElementById('study-front').textContent = flashcards[currentIndex].question;
+    document.getElementById('study-back').textContent = flashcards[currentIndex].answer;
+    document.querySelector('.study-card').classList.remove('flipped');
+  }
+
+  function updateCardCounter() {
+    document.getElementById('current-card').textContent = currentIndex + 1;
+    document.getElementById('total-cards').textContent = flashcards.length;
+  }
+
+  // Event listeners
+  document.getElementById('study-prev').addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showCurrentCard();
+      updateCardCounter();
+    }
+  });
+
+  document.getElementById('study-next').addEventListener('click', () => {
+    if (currentIndex < flashcards.length - 1) {
+      currentIndex++;
+      showCurrentCard();
+      updateCardCounter();
+    }
+  });
+
+  document.getElementById('study-flip').addEventListener('click', () => {
+    document.querySelector('.study-card').classList.toggle('flipped');
+  });
+
+  document.getElementById('back-to-list').addEventListener('click', () => {
+    window.location.href = '/';
+  });
+
+  // Initial load
+  loadFlashcards();
+});

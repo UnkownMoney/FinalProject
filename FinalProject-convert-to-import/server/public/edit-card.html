@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Flashcard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="form-container">
+    <h1>Edit Flashcard</h1>
+    <form id="edit-form">
+      <input type="hidden" id="card-id">
+      <div class="form-group">
+        <label for="question">Question:</label>
+        <textarea id="question" class="form-control" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="answer">Answer:</label>
+        <textarea id="answer" class="form-control" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+  </div>
+  <script src="/scripts/edit-card.js"></script>
+</body>
+</html>

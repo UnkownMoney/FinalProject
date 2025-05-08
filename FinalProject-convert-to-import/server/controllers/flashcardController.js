@@ -1,6 +1,6 @@
-import db from '../db.js';
+import { pool } from '../db.js';
 
-// Validation helper
+// Validation helper (unchanged)
 const validateFlashcard = (question, answer) => {
   if (!question || !answer) {
     return { valid: false, error: 'Question and answer are required' };
@@ -14,12 +14,17 @@ const validateFlashcard = (question, answer) => {
 // GET all flashcards
 export const getAllFlashcards = async (req, res) => {
   try {
-    const result = await db.query(`
-      SELECT *, 
-        TO_CHAR(created_at, 'YYYY-MM-DD HH24:MI') as formatted_created_at,
-        TO_CHAR(updated_at, 'YYYY-MM-DD HH24:MI') as formatted_updated_at
+    const result = await pool.query(`
+      SELECT 
+        id,
+        question,
+        answer,
+        created_at,
+        updated_at,
+        TO_CHAR(created_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_created_at,
+        TO_CHAR(updated_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_updated_at
       FROM flashcards 
-      ORDER BY id DESC
+      ORDER BY created_at DESC
     `);
     res.status(200).json(result.rows);
   } catch (err) {
@@ -34,7 +39,19 @@ export const getAllFlashcards = async (req, res) => {
 // GET single flashcard
 export const getFlashcard = async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM flashcards WHERE id = $1', [req.params.id]);
+    const result = await pool.query(`
+      SELECT 
+        id,
+        question,
+        answer,
+        created_at,
+        updated_at,
+        TO_CHAR(created_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_created_at,
+        TO_CHAR(updated_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_updated_at
+      FROM flashcards 
+      WHERE id = $1
+    `, [req.params.id]);
+    
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Flashcard not found' });
     }
@@ -59,10 +76,17 @@ export const createFlashcard = async (req, res) => {
   }
 
   try {
-    const result = await db.query(
+    const result = await pool.query(
       `INSERT INTO flashcards (question, answer) 
        VALUES ($1, $2) 
-       RETURNING *`,
+       RETURNING 
+         id,
+         question,
+         answer,
+         created_at,
+         updated_at,
+         TO_CHAR(created_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_created_at,
+         TO_CHAR(updated_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_updated_at`,
       [question.trim(), answer.trim()]
     );
     res.status(201).json(result.rows[0]);
@@ -87,16 +111,23 @@ export const updateFlashcard = async (req, res) => {
   }
 
   try {
-    const checkResult = await db.query('SELECT id FROM flashcards WHERE id = $1', [id]);
+    const checkResult = await pool.query('SELECT id FROM flashcards WHERE id = $1', [id]);
     if (checkResult.rows.length === 0) {
       return res.status(404).json({ error: 'Flashcard not found' });
     }
 
-    const updateResult = await db.query(
+    const updateResult = await pool.query(
       `UPDATE flashcards 
-       SET question = $1, answer = $2, updated_at = NOW() 
+       SET question = $1, answer = $2, updated_at = NOW()
        WHERE id = $3 
-       RETURNING *`,
+       RETURNING 
+         id,
+         question,
+         answer,
+         created_at,
+         updated_at,
+         TO_CHAR(created_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_created_at,
+         TO_CHAR(updated_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_updated_at`,
       [question.trim(), answer.trim(), id]
     );
 
@@ -114,7 +145,7 @@ export const updateFlashcard = async (req, res) => {
 export const deleteFlashcard = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await db.query(
+    const result = await pool.query(
       `DELETE FROM flashcards 
        WHERE id = $1 
        RETURNING id`,

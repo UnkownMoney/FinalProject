@@ -1,67 +1,49 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import flashcardRoutes from './routes/flashcardRoutes.js';
-import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-// Enhanced CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
-
-// Middleware - order matters!
-app.use(express.json()); // MUST come before routes
+// Basic configuration first
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Routes - mounted before static files
-app.use('/api/flashcards', flashcardRoutes);
+// Serve static files
+const publicPath = path.join(__dirname, 'public');
+app.use(express.static(publicPath));
 
-// Serve static files (HTML, JS, CSS)
-app.use(express.static(path.join(__dirname, 'public')));
 
-// HTML page routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'view-cards.html'));
+app.use(express.static(publicPath));
+
+// Simple test route to verify server is working
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
-app.get('/add-card', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'add-card.html'));
-});
+// Import routes with error handling
+let flashcardRoutes;
+try {
+  flashcardRoutes = (await import('./routes/flashcardRoutes.js')).default;
+  app.use('/api/flashcards', flashcardRoutes);
+  console.log('Flashcard routes loaded successfully');
+} catch (err) {
+  console.error('Failed to load flashcard routes:', err);
+}
 
-app.get('/study-mode', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'study-mode.html'));
-});
-
-// Debugging middleware (temporary)
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-  next();
-});
-
-// Error handlers
-app.use((req, res) => {
-  console.warn(`404: ${req.method} ${req.originalUrl}`);
-  res.status(404).json({ message: 'Route not found' });
-});
-
-app.use((err, req, res, next) => {
-  console.error(`500: ${err.stack}`);
-  res.status(500).json({ message: 'Internal server error' });
+// Basic HTML routes
+app.get(['/', '/view-cards', '/add-card', '/study-mode'], (req, res) => {
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`API Base: /api/flashcards`);
-  console.log(`Static files served from: ${path.join(__dirname, 'public')}`);
+  console.log(`Static files path: ${publicPath}`);
 });

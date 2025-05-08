@@ -80,12 +80,10 @@ if (getEl('#view-cards-page')) {
   const cardCount = getEl('#card-count');
   let flashcards = [];
 
-  // Format date for display
   const formatDate = (dateString) => {
     return dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
   };
 
-  // Render flashcards to DOM
   const renderFlashcards = () => {
     if (!flashcards.length) {
       cardList.innerHTML = '<div class="no-cards">No flashcards yet. Add one to get started!</div>';
@@ -113,7 +111,6 @@ if (getEl('#view-cards-page')) {
       </div>
     `).join('');
 
-    // Attach event listeners
     document.querySelectorAll('.study-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         window.location.href = '/study-mode';
@@ -125,14 +122,13 @@ if (getEl('#view-cards-page')) {
     });
   };
 
-  // Delete flashcard
   const handleDelete = async (e) => {
     const cardId = e.currentTarget.dataset.id;
     if (!confirm('Delete this flashcard permanently?')) return;
 
     try {
-      const response = await fetch(`${API_BASE}/${cardId}`, { 
-        method: 'DELETE' 
+      const response = await fetch(`${API_BASE}/${cardId}`, {
+        method: 'DELETE'
       });
 
       if (!response.ok) {
@@ -149,12 +145,11 @@ if (getEl('#view-cards-page')) {
     }
   };
 
-  // Load all flashcards
   const loadFlashcards = async () => {
     try {
       const response = await fetch(API_BASE);
       if (!response.ok) throw new Error('Failed to load flashcards');
-      
+
       flashcards = await response.json();
       renderFlashcards();
     } catch (error) {
@@ -163,7 +158,6 @@ if (getEl('#view-cards-page')) {
     }
   };
 
-  // Initialize
   loadFlashcards();
 }
 
@@ -185,18 +179,17 @@ if (getEl('#study-mode-page')) {
   let currentIndex = 0;
   let isFlipped = false;
 
-  // Load flashcards for study
   const loadStudyCards = async () => {
     try {
       const response = await fetch(API_BASE);
       if (!response.ok) throw new Error('Failed to load flashcards');
-      
+
       flashcards = await response.json();
       if (flashcards.length === 0) {
         studyFront.textContent = 'No flashcards available';
         return;
       }
-      
+
       totalCardsEl.textContent = flashcards.length;
       showCard();
     } catch (error) {
@@ -206,13 +199,12 @@ if (getEl('#study-mode-page')) {
     }
   };
 
-  // Show current card
   const showCard = () => {
     const card = flashcards[currentIndex];
     studyFront.textContent = card.question;
     studyBack.textContent = card.answer;
     currentCardEl.textContent = currentIndex + 1;
-    
+
     if (isFlipped) {
       studyCard.classList.add('flipped');
     } else {
@@ -220,7 +212,6 @@ if (getEl('#study-mode-page')) {
     }
   };
 
-  // Event listeners
   flipBtn.addEventListener('click', () => {
     isFlipped = !isFlipped;
     studyCard.classList.toggle('flipped');
@@ -244,10 +235,9 @@ if (getEl('#study-mode-page')) {
     window.location.href = '/view-cards';
   });
 
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (flashcards.length === 0) return;
-    
+
     switch (e.key) {
       case 'ArrowLeft':
         prevBtn.click();
@@ -263,6 +253,32 @@ if (getEl('#study-mode-page')) {
     }
   });
 
-  // Initialize
   loadStudyCards();
 }
+
+// ======================
+// HOME PAGE NAVIGATION (Optional for Button-based layout)
+// ======================
+document.addEventListener('DOMContentLoaded', () => {
+  const addCardBtn = getEl('#addCardBtn');
+  const viewCardsBtn = getEl('#viewCardsBtn');
+  const studyModeBtn = getEl('#studyModeBtn');
+
+  if (addCardBtn) {
+    addCardBtn.addEventListener('click', () => {
+      window.location.href = '/add-card';
+    });
+  }
+
+  if (viewCardsBtn) {
+    viewCardsBtn.addEventListener('click', () => {
+      window.location.href = '/view-cards';
+    });
+  }
+
+  if (studyModeBtn) {
+    studyModeBtn.addEventListener('click', () => {
+      window.location.href = '/study-mode';
+    });
+  }
+});
