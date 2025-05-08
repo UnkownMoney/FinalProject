@@ -1,50 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const cardId = urlParams.get('id');
-    
-    if (!cardId) {
-      alert('No card ID specified');
-      window.location.href = '/';
-      return;
-    }
-  
-    document.getElementById('card-id').value = cardId;
-  
-    // Load existing card data
-    fetch(`/api/flashcards/${cardId}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('question').value = data.question;
-        document.getElementById('answer').value = data.answer;
-      })
-      .catch(err => {
-        console.error('Error loading card:', err);
-        alert('Error loading card data');
-      });
-  
-    // Handle form submission
-    document.getElementById('edit-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      try {
-        const response = await fetch(`/api/flashcards/${cardId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            question: document.getElementById('question').value,
-            answer: document.getElementById('answer').value
-          })
-        });
-  
-        if (!response.ok) throw new Error('Update failed');
-        
-        alert('Card updated successfully!');
-        window.location.href = '/view-cards';
-      } catch (err) {
-        console.error('Update error:', err);
-        alert('Error updating card');
-      }
-    });
+// ✅ edit-card.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const cardId = params.get("id");
+  const questionInput = document.getElementById("edit-question");
+  const answerInput = document.getElementById("edit-answer");
+  const form = document.getElementById("edit-card-form");
+  document.getElementById("card-id").value = cardId;
+
+  fetch(`/api/flashcards/${cardId}`)
+    .then((res) => res.json())
+    .then((card) => {
+      questionInput.value = card.question;
+      answerInput.value = card.answer;
+    })
+    .catch(() => alert("Failed to load card"));
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const question = questionInput.value;
+    const answer = answerInput.value;
+
+    fetch(`/api/flashcards/${cardId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, answer })
+    })
+      .then(() => window.location.href = "/view-cards")
+      .catch(() => alert("Failed to update card"));
   });
+});

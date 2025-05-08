@@ -1,65 +1,73 @@
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded - home.js running');
-    
-    // Debug: Verify buttons exist
-    const buttons = {
-        add: document.getElementById('add-card-btn'),
-        view: document.getElementById('view-cards-btn'),
-        study: document.getElementById('study-mode-btn')
-    };
-    
-    console.log('Found buttons:', {
-        addButton: !!buttons.add,
-        viewButton: !!buttons.view,
-        studyButton: !!buttons.study
+
+// Study Mode Functionality
+const flashcard = document.getElementById('flashcard');
+const studyQuestion = document.getElementById('study-question');
+const studyAnswer = document.getElementById('study-answer');
+const flipCardBtn = document.getElementById('flip-card');
+const nextCardBtn = document.getElementById('next-card');
+const exitStudyBtn = document.getElementById('exit-study');
+const cardPosition = document.getElementById('card-position');
+const totalCards = document.getElementById('total-cards');
+
+let flashcards = [];
+let currentCardIndex = 0;
+
+// Initialize study mode
+function initStudyMode() {
+  fetch('/api/flashcards')
+    .then(res => res.json())
+    .then(data => {
+      flashcards = data;
+      totalCards.textContent = data.length;
+      
+      if (data.length === 0) {
+        studyQuestion.textContent = "No flashcards available";
+        return;
+      }
+      
+      showCard(currentCardIndex);
+    })
+    .catch(err => {
+      console.error("Error loading cards:", err);
+      studyQuestion.textContent = "Error loading flashcards";
     });
+}
 
-    // Navigation handler
-    const navigate = (path) => {
-        console.log(`Navigating to: ${path}`);
-        window.location.href = path;
-    };
+// Show current card
+function showCard(index) {
+  if (index >= flashcards.length) {
+    index = 0; // Loop back to first card
+  }
+  
+  const card = flashcards[index];
+  studyQuestion.textContent = card.question;
+  studyAnswer.textContent = card.answer;
+  cardPosition.textContent = index + 1;
+  
+  // Reset card to front
+  flashcard.classList.remove('flipped');
+}
 
-    // Event listeners with fallbacks
-    if (buttons.add) {
-        buttons.add.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Add Card button clicked');
-            navigate('/add-card');
-        });
-    }
+// Event Listeners
+if (flipCardBtn) {
+  flipCardBtn.addEventListener('click', () => {
+    flashcard.classList.toggle('flipped');
+    flipCardBtn.textContent = flashcard.classList.contains('flipped') ? 'Show Question' : 'Show Answer';
+  });
+}
 
-    if (buttons.view) {
-        buttons.view.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('View Cards button clicked');
-            navigate('/view-cards');
-        });
-    }
+if (nextCardBtn) {
+  nextCardBtn.addEventListener('click', () => {
+    currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+    showCard(currentCardIndex);
+  });
+}
 
-    if (buttons.study) {
-        buttons.study.addEventListener('click', (e) => {
-            e.preventDefault();
-            console.log('Study Mode button clicked');
-            navigate('/study-mode');
-        });
-    }
+if (exitStudyBtn) {
+  exitStudyBtn.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+}
 
-    // Generic handler for any .nav-button
-    document.querySelectorAll('.nav-button').forEach(button => {
-        if (!button.id) return;
-        
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const route = button.id.replace('-btn', '');
-            console.log(`Generic handler navigating to /${route}`);
-            navigate(`/${route}`);
-        });
-    });
-
-    // Debug: List all clickable elements
-    console.log('All elements with click handlers:', 
-        Array.from(document.querySelectorAll('[id*="-btn"]'))
-            .map(el => ({ id: el.id, tag: el.tagName }))
-    );
-});
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initStudyMode);

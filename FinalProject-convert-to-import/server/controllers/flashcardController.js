@@ -10,8 +10,7 @@ const validateFlashcard = (question, answer) => {
   }
   return { valid: true };
 };
-
-// GET all flashcards
+// ✅ FIXED: GET all flashcards
 export const getAllFlashcards = async (req, res) => {
   try {
     const result = await pool.query(`
@@ -26,7 +25,10 @@ export const getAllFlashcards = async (req, res) => {
       FROM flashcards 
       ORDER BY created_at DESC
     `);
+    
+    // ✅ FIX: Return just the array
     res.status(200).json(result.rows);
+    
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ 
@@ -35,6 +37,8 @@ export const getAllFlashcards = async (req, res) => {
     });
   }
 };
+
+
 
 // GET single flashcard
 export const getFlashcard = async (req, res) => {

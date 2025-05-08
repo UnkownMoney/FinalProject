@@ -1,25 +1,21 @@
+<!-- edit-card.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Edit Flashcard</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="form-container">
+  <div class="container">
     <h1>Edit Flashcard</h1>
     <form id="edit-form">
-      <input type="hidden" id="card-id">
-      <div class="form-group">
-        <label for="question">Question:</label>
-        <textarea id="question" class="form-control" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="answer">Answer:</label>
-        <textarea id="answer" class="form-control" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <input type="text" id="edit-question" placeholder="Edit question" required>
+      <input type="text" id="edit-answer" placeholder="Edit answer" required>
+      <button type="submit">Update Card</button>
     </form>
+    <a href="/view-cards">Back to All Cards</a>
   </div>
-  <script src="/scripts/edit-card.js"></script>
+  <script src="/edit-card.js"></script>
 </body>
 </html>

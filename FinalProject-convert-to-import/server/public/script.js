@@ -1,284 +1,191 @@
-// ======================
-// CONSTANTS AND UTILITIES
-// ======================
-const API_BASE = '/api/flashcards'; // Updated to match backend
-const TOAST_DURATION = 3000;
-
-// Safe DOM element selector
-const getEl = (selector, parent = document) => {
-  const el = parent.querySelector(selector);
-  if (!el) console.warn(`Element not found: ${selector}`);
-  return el;
-};
-
-// Display temporary notification
-const showToast = (message, isError = false) => {
-  const toast = document.createElement('div');
-  toast.className = `toast ${isError ? 'error' : 'success'}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), TOAST_DURATION);
-};
-
-// Escape HTML for security
-const escapeHtml = (unsafe) => {
-  if (!unsafe) return '';
-  return unsafe.toString()
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
-
-// ======================
-// ADD CARD PAGE
-// ======================
-if (getEl('#add-card-page')) {
-  const form = getEl('#flashcard-form');
-  const submitBtn = getEl('#submit-btn', form);
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-    try {
-      const formData = new FormData(form);
-      const response = await fetch(API_BASE, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: formData.get('question').trim(),
-          answer: formData.get('answer').trim()
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save flashcard');
-      }
-
-      showToast('Flashcard created successfully!');
-      form.reset();
-      setTimeout(() => window.location.href = '/view-cards', 1500);
-    } catch (error) {
-      showToast(error.message, true);
-      console.error('Submission error:', error);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Flashcard';
-    }
-  });
-}
-
-// ======================
-// VIEW CARDS PAGE
-// ======================
-if (getEl('#view-cards-page')) {
-  const cardList = getEl('#flashcard-list');
-  const cardCount = getEl('#card-count');
-  let flashcards = [];
-
-  const formatDate = (dateString) => {
-    return dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
-  };
-
-  const renderFlashcards = () => {
-    if (!flashcards.length) {
-      cardList.innerHTML = '<div class="no-cards">No flashcards yet. Add one to get started!</div>';
-      cardCount.textContent = '0';
-      return;
-    }
-
-    cardList.innerHTML = flashcards.map(card => `
-      <div class="flashcard-item" data-id="${card.id}">
-        <div class="card-content">
-          <h3>${escapeHtml(card.question)}</h3>
-          <div class="card-meta">
-            <span>Created: ${formatDate(card.created_at)}</span>
-            ${card.updated_at ? `<span> | Updated: ${formatDate(card.updated_at)}</span>` : ''}
-          </div>
-        </div>
-        <div class="card-actions">
-          <button class="btn study-btn" data-id="${card.id}">
-            <i class="fas fa-book-open"></i> Study
-          </button>
-          <button class="btn delete-btn" data-id="${card.id}">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-    `).join('');
-
-    document.querySelectorAll('.study-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        window.location.href = '/study-mode';
-      });
-    });
-
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', handleDelete);
-    });
-  };
-
-  const handleDelete = async (e) => {
-    const cardId = e.currentTarget.dataset.id;
-    if (!confirm('Delete this flashcard permanently?')) return;
-
-    try {
-      const response = await fetch(`${API_BASE}/${cardId}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Delete failed');
-      }
-
-      flashcards = flashcards.filter(card => card.id !== cardId);
-      renderFlashcards();
-      showToast('Flashcard deleted successfully');
-    } catch (error) {
-      showToast(error.message, true);
-      console.error('Delete error:', error);
-    }
-  };
-
-  const loadFlashcards = async () => {
-    try {
-      const response = await fetch(API_BASE);
-      if (!response.ok) throw new Error('Failed to load flashcards');
-
-      flashcards = await response.json();
-      renderFlashcards();
-    } catch (error) {
-      showToast(error.message, true);
-      console.error('Load error:', error);
-    }
-  };
-
-  loadFlashcards();
-}
-
-// ======================
-// STUDY MODE PAGE
-// ======================
-if (getEl('#study-mode-page')) {
-  const studyFront = getEl('#study-front');
-  const studyBack = getEl('#study-back');
-  const currentCardEl = getEl('#current-card');
-  const totalCardsEl = getEl('#total-cards');
-  const prevBtn = getEl('#study-prev');
-  const nextBtn = getEl('#study-next');
-  const flipBtn = getEl('#study-flip');
-  const studyCard = getEl('.study-card');
-  const backBtn = getEl('#back-to-list');
+document.addEventListener("DOMContentLoaded", () => {
+  const cardList = document.getElementById("card-list");
+  const cardCountDisplay = document.getElementById("card-count");
+  const startStudyBtn = document.getElementById("start-study-btn");
+  const studyModeContainer = document.getElementById("study-mode");
+  const studyCardContainer = document.getElementById("study-card");
+  const nextCardBtn = document.getElementById("next-card-btn");
+  const exitStudyBtn = document.getElementById("exit-study-btn");
 
   let flashcards = [];
-  let currentIndex = 0;
-  let isFlipped = false;
+  let currentCardIndex = 0;
 
-  const loadStudyCards = async () => {
-    try {
-      const response = await fetch(API_BASE);
-      if (!response.ok) throw new Error('Failed to load flashcards');
+  // Fetch flashcards
+  fetch("/api/flashcards")
+    .then((res) => res.json())
+    .then((cards) => {
+      flashcards = cards;
+      cardList.innerHTML = "";
 
-      flashcards = await response.json();
-      if (flashcards.length === 0) {
-        studyFront.textContent = 'No flashcards available';
+      cardCountDisplay.textContent = `Total Cards: ${cards.length}`;
+
+      if (cards.length === 0) {
+        cardList.innerHTML = "<p>No flashcards found.</p>";
         return;
       }
 
-      totalCardsEl.textContent = flashcards.length;
-      showCard();
-    } catch (error) {
-      studyFront.textContent = 'Error loading flashcards';
-      showToast(error.message, true);
-      console.error('Study load error:', error);
-    }
-  };
+      // Display each card
+      cards.forEach((card) => {
+        const cardEl = document.createElement("div");
+        cardEl.classList.add("flashcard");
+        cardEl.innerHTML = `
+          <div class="flashcard-inner">
+            <div class="flashcard-front"><strong>Q:</strong> ${card.question}</div>
+            <div class="flashcard-back"><strong>A:</strong> ${card.answer}</div>
+          </div>
+          <div class="card-buttons">
+            <button class="edit-btn btn" data-id="${card.id}">Edit</button>
+            <button class="delete-btn btn" data-id="${card.id}">Delete</button>
+          </div>
+        `;
 
-  const showCard = () => {
-    const card = flashcards[currentIndex];
-    studyFront.textContent = card.question;
-    studyBack.textContent = card.answer;
-    currentCardEl.textContent = currentIndex + 1;
+        // Flip on click
+        cardEl.addEventListener("click", () => {
+          cardEl.classList.toggle("flipped");
+        });
 
-    if (isFlipped) {
-      studyCard.classList.add('flipped');
-    } else {
-      studyCard.classList.remove('flipped');
-    }
-  };
+        cardList.appendChild(cardEl);
+      });
 
-  flipBtn.addEventListener('click', () => {
-    isFlipped = !isFlipped;
-    studyCard.classList.toggle('flipped');
-  });
+      // Edit button behavior
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          window.location.href = `/edit-card?id=${id}`;
+        });
+      });
 
-  prevBtn.addEventListener('click', () => {
-    if (flashcards.length === 0) return;
-    currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
-    isFlipped = false;
-    showCard();
-  });
+      // Delete button behavior
+      document.querySelectorAll(".delete-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          fetch(`/api/flashcards/${id}`, { method: "DELETE" })
+            .then(() => location.reload())
+            .catch(() => alert("Error deleting card"));
+        });
+      });
+    })
+    .catch((err) => {
+      console.error("Error loading cards:", err);
+      cardList.innerHTML = "<p>Failed to load flashcards.</p>";
+    });
 
-  nextBtn.addEventListener('click', () => {
-    if (flashcards.length === 0) return;
-    currentIndex = (currentIndex + 1) % flashcards.length;
-    isFlipped = false;
-    showCard();
-  });
+  // Start Study Mode
+  if (startStudyBtn) {
+    startStudyBtn.addEventListener("click", () => {
+      if (flashcards.length === 0) {
+        alert("No flashcards to study.");
+        return;
+      }
+      currentCardIndex = 0;
+      cardList.style.display = "none";
+      startStudyBtn.style.display = "none";
+      studyModeContainer.style.display = "block";
+      showCard(currentCardIndex);
+    });
+  }
 
-  backBtn.addEventListener('click', () => {
-    window.location.href = '/view-cards';
-  });
+  // Render card with flip for study mode
+  function showCard(index) {
+    const card = flashcards[index];
+    studyCardContainer.innerHTML = `
+      <div class="flashcard flipped" id="study-flashcard">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">${card.question}</div>
+          <div class="flashcard-back">${card.answer}</div>
+        </div>
+      </div>
+      <div class="study-controls">
+        <button class="btn show" id="flip-card-btn">Show Answer</button>
+        <button class="btn next" id="next-card-btn-inner">Next Card</button>
+        <button class="btn exit" id="exit-study-btn-inner">Exit Study Mode</button>
+      </div>
+    `;
 
-  document.addEventListener('keydown', (e) => {
-    if (flashcards.length === 0) return;
+    // Flip card
+    document.getElementById("flip-card-btn").addEventListener("click", () => {
+      document.getElementById("study-flashcard").classList.toggle("flipped");
+    });
 
-    switch (e.key) {
-      case 'ArrowLeft':
-        prevBtn.click();
-        break;
-      case 'ArrowRight':
-        nextBtn.click();
-        break;
-      case ' ':
-      case 'Enter':
-        flipBtn.click();
-        e.preventDefault();
-        break;
-    }
-  });
+    // Next card
+    document.getElementById("next-card-btn-inner").addEventListener("click", () => {
+      currentCardIndex++;
+      if (currentCardIndex >= flashcards.length) {
+        alert("You've finished studying all the cards!");
+        exitStudy();
+      } else {
+        showCard(currentCardIndex);
+      }
+    });
 
-  loadStudyCards();
+    // Exit
+    document.getElementById("exit-study-btn-inner").addEventListener("click", () => {
+      exitStudy();
+    });
+  }
+
+  function exitStudy() {
+    studyModeContainer.style.display = "none";
+    cardList.style.display = "block";
+    startStudyBtn.style.display = "inline";
+  }
+});
+
+// View Cards Functionality
+function initViewCards() {
+  const cardList = document.getElementById('card-list');
+  const cardCount = document.getElementById('card-count');
+  
+  if (!cardList) return; // Only run on view-cards.html
+
+  fetch('/api/flashcards')
+    .then(res => {
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then(data => {
+      const cards = Array.isArray(data) ? data : data.data || [];
+      cardCount.textContent = cards.length;
+      
+      if (cards.length === 0) {
+        cardList.innerHTML = '<p class="no-cards">No flashcards found. <a href="/add-card.html">Add your first card</a></p>';
+        return;
+      }
+      
+      cardList.innerHTML = cards.map(card => `
+        <div class="card-item">
+          <div class="card-question"><strong>Q:</strong> ${card.question}</div>
+          <div class="card-answer"><strong>A:</strong> ${card.answer}</div>
+          <div class="card-actions">
+            <a href="/edit-card.html?id=${card.id}" class="btn-edit">Edit</a>
+            <button class="btn-delete" data-id="${card.id}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+      
+      // Add delete handlers
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          if (confirm('Delete this flashcard?')) {
+            fetch(`/api/flashcards/${btn.dataset.id}`, { method: 'DELETE' })
+              .then(() => location.reload())
+              .catch(err => console.error('Delete failed:', err));
+          }
+        });
+      });
+    })
+    .catch(err => {
+      console.error('Fetch error:', err);
+      cardList.innerHTML = `<p class="no-cards">Error loading flashcards: ${err.message}</p>`;
+    });
 }
 
-// ======================
-// HOME PAGE NAVIGATION (Optional for Button-based layout)
-// ======================
+// Initialize based on current page
 document.addEventListener('DOMContentLoaded', () => {
-  const addCardBtn = getEl('#addCardBtn');
-  const viewCardsBtn = getEl('#viewCardsBtn');
-  const studyModeBtn = getEl('#studyModeBtn');
-
-  if (addCardBtn) {
-    addCardBtn.addEventListener('click', () => {
-      window.location.href = '/add-card';
-    });
+  if (document.getElementById('card-list')) {
+    initViewCards();
   }
-
-  if (viewCardsBtn) {
-    viewCardsBtn.addEventListener('click', () => {
-      window.location.href = '/view-cards';
-    });
-  }
-
-  if (studyModeBtn) {
-    studyModeBtn.addEventListener('click', () => {
-      window.location.href = '/study-mode';
-    });
-  }
+  // Your other initialization code for other pages...
 });

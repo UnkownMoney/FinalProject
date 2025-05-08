@@ -1,59 +1,38 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  let flashcards = [];
-  let currentIndex = 0;
-
-  // Fetch flashcards from API
-  async function loadFlashcards() {
-    try {
-      const response = await fetch('/api/flashcards');
-      if (!response.ok) throw new Error('Failed to load cards');
-      flashcards = await response.json();
-      updateCardCounter();
-      showCurrentCard();
-    } catch (err) {
-      console.error('Error:', err);
-      document.getElementById('study-front').textContent = 'Error loading cards';
-    }
-  }
-
-  // Navigation functions
-  function showCurrentCard() {
-    if (flashcards.length === 0) return;
-    document.getElementById('study-front').textContent = flashcards[currentIndex].question;
-    document.getElementById('study-back').textContent = flashcards[currentIndex].answer;
-    document.querySelector('.study-card').classList.remove('flipped');
-  }
-
-  function updateCardCounter() {
-    document.getElementById('current-card').textContent = currentIndex + 1;
-    document.getElementById('total-cards').textContent = flashcards.length;
-  }
-
-  // Event listeners
-  document.getElementById('study-prev').addEventListener('click', () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      showCurrentCard();
-      updateCardCounter();
-    }
-  });
-
-  document.getElementById('study-next').addEventListener('click', () => {
-    if (currentIndex < flashcards.length - 1) {
-      currentIndex++;
-      showCurrentCard();
-      updateCardCounter();
-    }
-  });
-
-  document.getElementById('study-flip').addEventListener('click', () => {
-    document.querySelector('.study-card').classList.toggle('flipped');
-  });
-
-  document.getElementById('back-to-list').addEventListener('click', () => {
-    window.location.href = '/';
-  });
-
-  // Initial load
-  loadFlashcards();
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Mode</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="study-container">
+    <!-- Card counter at top -->
+    <div class="card-counter">
+      <span id="card-position">1</span> / <span id="total-cards">14</span>
+    </div>
+    
+    <!-- Main flashcard area -->
+    <div class="quizlet-flashcard" id="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-front" id="study-question">
+          <!-- Question will appear here -->
+        </div>
+        <div class="flashcard-back" id="study-answer">
+          <!-- Answer will appear here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Control buttons -->
+    <div class="quizlet-controls">
+      <button id="flip-card" class="control-btn flip">Show Answer</button>
+      <button id="next-card" class="control-btn next">Next Card</button>
+      <button id="exit-study" class="control-btn exit">Exit</button>
+    </div>
+  </div>
+  
+  <script src="/home.js"></script>
+</body>
+</html>

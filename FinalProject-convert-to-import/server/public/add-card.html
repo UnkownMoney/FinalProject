@@ -1,33 +1,21 @@
+<!-- add-card.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Flashcard</title>
-    <!-- Make sure this path is correct -->
-    <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8">
+  <title>Add Flashcard</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="form-container">
-        <h1>Add New Flashcard</h1>
-        
-        <form id="flashcard-form">
-            <div class="form-group">
-                <label for="question">Question:</label>
-                <textarea id="question" class="form-control" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label for="answer">Answer:</label>
-                <textarea id="answer" class="form-control" required></textarea>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Add Flashcard</button>
-        </form>
-        
-        <a href="/" class="btn">Back to Home</a>
-    </div>
-    
-    <script src="/scripts/add-card.js"></script>
+  <div class="container">
+    <h1>Add a New Flashcard</h1>
+    <form id="add-form">
+      <input type="text" id="question" placeholder="Enter question" required>
+      <input type="text" id="answer" placeholder="Enter answer" required>
+      <button type="submit">Add Card</button>
+    </form>
+    <a href="/">Back to Home</a>
+  </div>
+  <script src="/add-card.js"></script>
 </body>
 </html>
