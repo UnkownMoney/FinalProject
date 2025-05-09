@@ -1,16 +1,36 @@
 import { pool } from '../db.js';
 
-// Validation helper (unchanged)
+// Enhanced validation helper with word count limit
 const validateFlashcard = (question, answer) => {
   if (!question || !answer) {
     return { valid: false, error: 'Question and answer are required' };
   }
-  if (question.length > 500 || answer.length > 500) {
+  
+  // Trim inputs first
+  const trimmedQuestion = question.trim();
+  const trimmedAnswer = answer.trim();
+
+  // Character length validation
+  if (trimmedQuestion.length > 500 || trimmedAnswer.length > 500) {
     return { valid: false, error: 'Content cannot exceed 500 characters' };
   }
+
+  // Word count validation
+  const questionWords = trimmedQuestion.split(/\s+/).filter(word => word.length > 0);
+  const answerWords = trimmedAnswer.split(/\s+/).filter(word => word.length > 0);
+
+  if (questionWords.length > 100) {
+    return { valid: false, error: 'Question cannot exceed 100 words' };
+  }
+
+  if (answerWords.length > 100) {
+    return { valid: false, error: 'Answer cannot exceed 100 words' };
+  }
+
   return { valid: true };
 };
-// ✅ FIXED: GET all flashcards
+
+// GET all flashcards
 export const getAllFlashcards = async (req, res) => {
   try {
     const result = await pool.query(`
@@ -26,9 +46,7 @@ export const getAllFlashcards = async (req, res) => {
       ORDER BY created_at DESC
     `);
     
-    // ✅ FIX: Return just the array
     res.status(200).json(result.rows);
-    
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ 
@@ -37,8 +55,6 @@ export const getAllFlashcards = async (req, res) => {
     });
   }
 };
-
-
 
 // GET single flashcard
 export const getFlashcard = async (req, res) => {
@@ -76,7 +92,10 @@ export const createFlashcard = async (req, res) => {
   // Validation
   const { valid, error } = validateFlashcard(question, answer);
   if (!valid) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ 
+      success: false,
+      error 
+    });
   }
 
   try {
@@ -93,10 +112,15 @@ export const createFlashcard = async (req, res) => {
          TO_CHAR(updated_at, 'MM/DD/YYYY, HH12:MI:SS AM') as formatted_updated_at`,
       [question.trim(), answer.trim()]
     );
-    res.status(201).json(result.rows[0]);
+    
+    res.status(201).json({
+      success: true,
+      data: result.rows[0]
+    });
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ 
+      success: false,
       error: 'Failed to create flashcard',
       details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
@@ -115,11 +139,20 @@ export const updateFlashcard = async (req, res) => {
   }
 
   try {
-    const checkResult = await pool.query('SELECT id FROM flashcards WHERE id = $1', [id]);
+    // Check if flashcard exists
+    const checkResult = await pool.query(
+      'SELECT id FROM flashcards WHERE id = $1', 
+      [id]
+    );
+    
     if (checkResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Flashcard not found' });
+      return res.status(404).json({ 
+        success: false,
+        error: 'Flashcard not found' 
+      });
     }
 
+    // Update flashcard
     const updateResult = await pool.query(
       `UPDATE flashcards 
        SET question = $1, answer = $2, updated_at = NOW()
@@ -135,10 +168,14 @@ export const updateFlashcard = async (req, res) => {
       [question.trim(), answer.trim(), id]
     );
 
-    res.status(200).json(updateResult.rows[0]);
+    res.status(200).json({
+      success: true,
+      data: updateResult.rows[0]
+    });
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ 
+      success: false,
       error: 'Failed to update flashcard',
       details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
@@ -149,6 +186,21 @@ export const updateFlashcard = async (req, res) => {
 export const deleteFlashcard = async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Check if flashcard exists first
+    const checkResult = await pool.query(
+      'SELECT id FROM flashcards WHERE id = $1',
+      [id]
+    );
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ 
+        success: false,
+        error: 'Flashcard not found' 
+      });
+    }
+
+    // Delete flashcard
     const result = await pool.query(
       `DELETE FROM flashcards 
        WHERE id = $1 
@@ -156,17 +208,15 @@ export const deleteFlashcard = async (req, res) => {
       [id]
     );
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Flashcard not found' });
-    }
-
     res.status(200).json({ 
+      success: true,
       message: 'Flashcard deleted successfully',
       deletedId: result.rows[0].id
     });
   } catch (err) {
     console.error('Database error:', err);
     res.status(500).json({ 
+      success: false,
       error: 'Failed to delete flashcard',
       details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });

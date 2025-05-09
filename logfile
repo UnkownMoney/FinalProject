@@ -298,3 +298,17 @@
 2025-05-08 03:44:58.860 UTC [3501] LOG:  checkpoint starting: end-of-recovery immediate wait
 2025-05-08 03:44:58.866 UTC [3501] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DD470, redo lsn=0/19DD470
 2025-05-08 03:44:58.872 UTC [3469] LOG:  database system is ready to accept connections
+2025-05-08 14:58:29.106 UTC [3870] LOG:  starting PostgreSQL 16.8 (Ubuntu 16.8-1.pgdg20.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-05-08 14:58:29.409 UTC [3870] LOG:  listening on IPv6 address "::1", port 5432
+2025-05-08 14:58:29.410 UTC [3870] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-05-08 14:58:29.415 UTC [3870] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-05-08 14:58:29.704 UTC [3880] LOG:  database system was interrupted; last known up at 2025-05-08 03:44:58 UTC
+2025-05-08 14:58:30.054 UTC [3880] LOG:  database system was not properly shut down; automatic recovery in progress
+2025-05-08 14:58:30.059 UTC [3880] LOG:  redo starts at 0/19DD4E8
+2025-05-08 14:58:30.059 UTC [3880] LOG:  invalid record length at 0/19DD520: expected at least 24, got 0
+2025-05-08 14:58:30.059 UTC [3880] LOG:  redo done at 0/19DD4E8 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2025-05-08 14:58:30.064 UTC [3878] LOG:  checkpoint starting: end-of-recovery immediate wait
+2025-05-08 14:58:30.071 UTC [3878] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.001 s, total=0.008 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/19DD520, redo lsn=0/19DD520
+2025-05-08 14:58:30.080 UTC [3870] LOG:  database system is ready to accept connections
+2025-05-08 15:53:30.915 UTC [3878] LOG:  checkpoint starting: time
+2025-05-08 15:53:31.022 UTC [3878] LOG:  checkpoint complete: wrote 2 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.101 s, sync=0.002 s, total=0.108 s; sync files=2, longest=0.002 s, average=0.001 s; distance=2 kB, estimate=2 kB; lsn=0/19DDFC8, redo lsn=0/19DDF90

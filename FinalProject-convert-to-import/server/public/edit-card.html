@@ -1,21 +1,34 @@
-<!-- edit-card.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Flashcard</title>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
+  <div class="edit-card-container">
     <h1>Edit Flashcard</h1>
-    <form id="edit-form">
-      <input type="text" id="edit-question" placeholder="Edit question" required>
-      <input type="text" id="edit-answer" placeholder="Edit answer" required>
-      <button type="submit">Update Card</button>
+    <form id="edit-card-form" class="edit-card-form">
+      <input type="hidden" id="card-id">
+      
+      <div class="form-group">
+        <label for="edit-question">Question</label>
+        <textarea id="edit-question" rows="3" placeholder="Enter the question..." required></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="edit-answer">Answer</label>
+        <textarea id="edit-answer" rows="3" placeholder="Enter the answer..." required></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Update Card</button>
+        <a href="/view-cards" class="btn-secondary">Back to All Cards</a>
+      </div>
     </form>
-    <a href="/view-cards">Back to All Cards</a>
   </div>
-  <script src="/edit-card.js"></script>
+  
+  <script src="edit-card.js"></script>
 </body>
 </html>

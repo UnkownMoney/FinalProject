@@ -1,191 +1,146 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const cardList = document.getElementById("card-list");
-  const cardCountDisplay = document.getElementById("card-count");
-  const startStudyBtn = document.getElementById("start-study-btn");
-  const studyModeContainer = document.getElementById("study-mode");
-  const studyCardContainer = document.getElementById("study-card");
-  const nextCardBtn = document.getElementById("next-card-btn");
-  const exitStudyBtn = document.getElementById("exit-study-btn");
+  // Initialize all functionalities
+  if (document.getElementById('flashcard')) {
+    initStudyMode();
+  }
+  if (document.getElementById('card-list')) {
+    initViewCards();
+  }
+  if (document.getElementById('add-card-form')) {
+    initAddCard();
+  }
+});
 
-  let flashcards = [];
+/* ===== STUDY MODE ===== */
+function initStudyMode() {
+  const flashcards = [];
   let currentCardIndex = 0;
 
   // Fetch flashcards
   fetch("/api/flashcards")
-    .then((res) => res.json())
-    .then((cards) => {
-      flashcards = cards;
-      cardList.innerHTML = "";
-
-      cardCountDisplay.textContent = `Total Cards: ${cards.length}`;
-
-      if (cards.length === 0) {
-        cardList.innerHTML = "<p>No flashcards found.</p>";
-        return;
-      }
-
-      // Display each card
-      cards.forEach((card) => {
-        const cardEl = document.createElement("div");
-        cardEl.classList.add("flashcard");
-        cardEl.innerHTML = `
-          <div class="flashcard-inner">
-            <div class="flashcard-front"><strong>Q:</strong> ${card.question}</div>
-            <div class="flashcard-back"><strong>A:</strong> ${card.answer}</div>
-          </div>
-          <div class="card-buttons">
-            <button class="edit-btn btn" data-id="${card.id}">Edit</button>
-            <button class="delete-btn btn" data-id="${card.id}">Delete</button>
-          </div>
-        `;
-
-        // Flip on click
-        cardEl.addEventListener("click", () => {
-          cardEl.classList.toggle("flipped");
-        });
-
-        cardList.appendChild(cardEl);
-      });
-
-      // Edit button behavior
-      document.querySelectorAll(".edit-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          window.location.href = `/edit-card?id=${id}`;
-        });
-      });
-
-      // Delete button behavior
-      document.querySelectorAll(".delete-btn").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          fetch(`/api/flashcards/${id}`, { method: "DELETE" })
-            .then(() => location.reload())
-            .catch(() => alert("Error deleting card"));
-        });
-      });
-    })
-    .catch((err) => {
-      console.error("Error loading cards:", err);
-      cardList.innerHTML = "<p>Failed to load flashcards.</p>";
-    });
-
-  // Start Study Mode
-  if (startStudyBtn) {
-    startStudyBtn.addEventListener("click", () => {
-      if (flashcards.length === 0) {
-        alert("No flashcards to study.");
-        return;
-      }
-      currentCardIndex = 0;
-      cardList.style.display = "none";
-      startStudyBtn.style.display = "none";
-      studyModeContainer.style.display = "block";
+    .then(res => res.json())
+    .then(data => {
+      flashcards.push(...(Array.isArray(data) ? data : data.data || []));
+      document.getElementById('total-cards').textContent = flashcards.length;
       showCard(currentCardIndex);
-    });
-  }
-
-  // Render card with flip for study mode
-  function showCard(index) {
-    const card = flashcards[index];
-    studyCardContainer.innerHTML = `
-      <div class="flashcard flipped" id="study-flashcard">
-        <div class="flashcard-inner">
-          <div class="flashcard-front">${card.question}</div>
-          <div class="flashcard-back">${card.answer}</div>
-        </div>
-      </div>
-      <div class="study-controls">
-        <button class="btn show" id="flip-card-btn">Show Answer</button>
-        <button class="btn next" id="next-card-btn-inner">Next Card</button>
-        <button class="btn exit" id="exit-study-btn-inner">Exit Study Mode</button>
-      </div>
-    `;
-
-    // Flip card
-    document.getElementById("flip-card-btn").addEventListener("click", () => {
-      document.getElementById("study-flashcard").classList.toggle("flipped");
-    });
-
-    // Next card
-    document.getElementById("next-card-btn-inner").addEventListener("click", () => {
-      currentCardIndex++;
-      if (currentCardIndex >= flashcards.length) {
-        alert("You've finished studying all the cards!");
-        exitStudy();
-      } else {
-        showCard(currentCardIndex);
-      }
-    });
-
-    // Exit
-    document.getElementById("exit-study-btn-inner").addEventListener("click", () => {
-      exitStudy();
-    });
-  }
-
-  function exitStudy() {
-    studyModeContainer.style.display = "none";
-    cardList.style.display = "block";
-    startStudyBtn.style.display = "inline";
-  }
-});
-
-// View Cards Functionality
-function initViewCards() {
-  const cardList = document.getElementById('card-list');
-  const cardCount = document.getElementById('card-count');
-  
-  if (!cardList) return; // Only run on view-cards.html
-
-  fetch('/api/flashcards')
-    .then(res => {
-      if (!res.ok) throw new Error('Network response was not ok');
-      return res.json();
     })
+    .catch(err => {
+      console.error("Error loading cards:", err);
+      document.getElementById('study-question').textContent = "Error loading flashcards";
+    });
+
+  // Show current card
+  function showCard(index) {
+    if (flashcards.length === 0) return;
+    
+    const card = flashcards[index];
+    document.getElementById('study-question').textContent = card.question;
+    document.getElementById('study-answer').textContent = card.answer;
+    document.getElementById('card-position').textContent = index + 1;
+    document.getElementById('flashcard').classList.remove('flipped');
+    updateFlipButtonText();
+  }
+
+  // Flip functionality
+  document.getElementById('flashcard').addEventListener('click', function() {
+    this.classList.toggle('flipped');
+    updateFlipButtonText();
+  });
+
+  // Flip button
+  document.getElementById('flip-card').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('flashcard').classList.toggle('flipped');
+    updateFlipButtonText();
+  });
+
+  // Next card button
+  document.getElementById('next-card').addEventListener('click', function() {
+    currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+    showCard(currentCardIndex);
+  });
+
+  // Exit button
+  document.getElementById('exit-study').addEventListener('click', function() {
+    window.location.href = "/";
+  });
+
+  function updateFlipButtonText() {
+    const isFlipped = document.getElementById('flashcard').classList.contains('flipped');
+    document.getElementById('flip-card').textContent = isFlipped ? 'Show Question' : 'Show Answer';
+  }
+}
+
+/* ===== VIEW CARDS ===== */
+function initViewCards() {
+  fetch('/api/flashcards')
+    .then(res => res.json())
     .then(data => {
       const cards = Array.isArray(data) ? data : data.data || [];
-      cardCount.textContent = cards.length;
+      document.getElementById('card-count').textContent = cards.length;
       
-      if (cards.length === 0) {
-        cardList.innerHTML = '<p class="no-cards">No flashcards found. <a href="/add-card.html">Add your first card</a></p>';
-        return;
-      }
+      const cardList = document.getElementById('card-list');
+      cardList.innerHTML = cards.length ? '' : '<p class="no-cards">No flashcards found</p>';
       
-      cardList.innerHTML = cards.map(card => `
-        <div class="card-item">
+      cards.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card-item';
+        cardEl.innerHTML = `
           <div class="card-question"><strong>Q:</strong> ${card.question}</div>
           <div class="card-answer"><strong>A:</strong> ${card.answer}</div>
           <div class="card-actions">
             <a href="/edit-card.html?id=${card.id}" class="btn-edit">Edit</a>
             <button class="btn-delete" data-id="${card.id}">Delete</button>
           </div>
-        </div>
-      `).join('');
-      
-      // Add delete handlers
-      document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (confirm('Delete this flashcard?')) {
-            fetch(`/api/flashcards/${btn.dataset.id}`, { method: 'DELETE' })
-              .then(() => location.reload())
-              .catch(err => console.error('Delete failed:', err));
-          }
-        });
+        `;
+        cardEl.querySelector('.btn-delete').addEventListener('click', deleteCard);
+        cardList.appendChild(cardEl);
       });
     })
     .catch(err => {
-      console.error('Fetch error:', err);
-      cardList.innerHTML = `<p class="no-cards">Error loading flashcards: ${err.message}</p>`;
+      console.error('Error:', err);
+      document.getElementById('card-list').innerHTML = '<p class="no-cards">Error loading cards</p>';
     });
+
+  function deleteCard(e) {
+    if (confirm('Delete this flashcard?')) {
+      fetch(`/api/flashcards/${e.target.dataset.id}`, { method: 'DELETE' })
+        .then(() => location.reload())
+        .catch(err => console.error('Delete failed:', err));
+    }
+  }
 }
 
-// Initialize based on current page
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('card-list')) {
-    initViewCards();
-  }
-  // Your other initialization code for other pages...
-});
+/* ===== ADD CARD ===== */
+function initAddCard() {
+  document.getElementById('add-card-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const question = form.question.value.trim();
+    const answer = form.answer.value.trim();
+
+    if (!question || !answer) {
+      alert('Please enter both question and answer');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/flashcards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, answer })
+      });
+
+      if (response.ok) {
+        alert('Card added successfully!');
+        form.reset();
+        window.location.href = '/view-cards.html';
+      } else {
+        throw new Error('Failed to add card');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Error adding card. Please try again.');
+    }
+  });
+}

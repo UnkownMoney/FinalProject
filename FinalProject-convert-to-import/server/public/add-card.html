@@ -1,21 +1,49 @@
-<!-- add-card.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add Flashcard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Flashcard</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Add a New Flashcard</h1>
-    <form id="add-form">
-      <input type="text" id="question" placeholder="Enter question" required>
-      <input type="text" id="answer" placeholder="Enter answer" required>
-      <button type="submit">Add Card</button>
-    </form>
-    <a href="/">Back to Home</a>
+    <div class="card-form-container">
+      <h1>Add New Flashcard</h1>
+      
+      <form id="add-card-form" class="flashcard-form">
+        <div class="form-group">
+          <label for="question">Question:</label>
+          <textarea 
+            id="question" 
+            name="question" 
+            placeholder="Enter your question (max 100 words)..." 
+            required
+          ></textarea>
+          <div class="word-counter">0/100 words</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="answer">Answer:</label>
+          <textarea 
+            id="answer" 
+            name="answer" 
+            placeholder="Enter the answer (max 100 words)..." 
+            required
+          ></textarea>
+          <div class="word-counter">0/100 words</div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-icon">+</span> Add Card
+          </button>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </form>
+    </div>
   </div>
-  <script src="/add-card.js"></script>
+  
+  <script src="/script.js"></script>
 </body>
 </html>
