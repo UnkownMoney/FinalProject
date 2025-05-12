@@ -608,3 +608,20 @@ body {
     text-align: center;
   }
 }
+
+.error-message {
+  color: #dc3545; /* Red */
+  font-size: 0.9rem;
+  margin-top: 5px;
+  display: none; /* Hidden by default */
+}
+
+
+textarea.invalid {
+  border: 1px solid #dc3545 !important;
+}
+
+.invalid {
+  border: 2px solid #dc3545;
+  background-color: #fff5f5;
+}

@@ -11,16 +11,19 @@
     <div class="card-form-container">
       <h1>Add New Flashcard</h1>
       
-      <form id="add-card-form" class="flashcard-form">
+      <!-- Added novalidate to disable browser validation -->
+      <form id="add-card-form" class="flashcard-form" novalidate>
         <div class="form-group">
           <label for="question">Question:</label>
           <textarea 
             id="question" 
             name="question" 
             placeholder="Enter your question (max 100 words)..." 
-            required
+            
           ></textarea>
-          <div class="word-counter">0/100 words</div>
+          <div class="word-counter" id="question-word-counter">0/100 words</div>
+          <!-- Error message container -->
+          <div id="question-error" class="error-message"></div>
         </div>
         
         <div class="form-group">
@@ -29,9 +32,11 @@
             id="answer" 
             name="answer" 
             placeholder="Enter the answer (max 100 words)..." 
-            required
+           
           ></textarea>
-          <div class="word-counter">0/100 words</div>
+          <div class="word-counter" id="answer-word-counter">0/100 words</div>
+          <!-- Error message container -->
+          <div id="answer-error" class="error-message"></div>
         </div>
         
         <div class="form-actions">
@@ -44,6 +49,7 @@
     </div>
   </div>
   
-  <script src="/script.js"></script>
+  <!-- Changed to add-card.js since we're using custom validation -->
+  <script src="/add-card.js"></script>
 </body>
 </html>
