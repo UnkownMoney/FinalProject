@@ -561,16 +561,18 @@ body {
   margin-top: 30px;
 }
 
+/* Base Button Styles - REQUIRED */
 .btn {
+  display: inline-block;
   padding: 10px 20px;
   border-radius: 6px;
   font-weight: 600;
-  cursor: pointer;
   text-decoration: none;
-  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
   transition: all 0.2s ease;
+  margin: 5px;
 }
-
 .btn-primary {
   background-color: #3498db;
   color: white;
@@ -583,16 +585,16 @@ body {
 }
 
 .btn-secondary {
-  background-color: #ecf0f1;
+  background-color: #3498db;
   color: #2c3e50;
-  border: none;
+  border: 2px solid #bdc3c7; /* Added border */
+  font-weight: 600;
 }
 
 .btn-secondary:hover {
   background-color: #d5dbdb;
-  transform: translateY(-2px);
+  border-color: #95a5a6; /* Darker border on hover */
 }
-
 /* Responsive Design */
 @media (max-width: 600px) {
   .edit-card-container {
@@ -613,7 +615,7 @@ body {
   color: #dc3545; /* Red */
   font-size: 0.9rem;
   margin-top: 5px;
-  display: none; /* Hidden by default */
+  display: none; 
 }
 
 
@@ -624,4 +626,73 @@ textarea.invalid {
 .invalid {
   border: 2px solid #dc3545;
   background-color: #fff5f5;
+}
+/* Core Styles */
+body.edit-page {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f7fafc;
+  padding: 20px;
+}
+
+.edit-card-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.edit-card-container h1 {
+  color: #2d3748;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  min-height: 100px;
+  font-size: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.form-actions button,
+.form-actions a {
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+.form-actions button {
+  background: #4299e1;
+  color: white;
+  border: none;
+}
+
+.form-actions a {
+  background: white;
+  color: #deeffc;
+  border: 1px solid #4299e1;
 }
